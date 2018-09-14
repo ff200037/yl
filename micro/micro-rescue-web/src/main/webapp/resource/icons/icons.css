@@ -1,0 +1,74 @@
+.add {
+	background-image: url(action_add.png) !important;
+}
+
+.delete {
+	background-image: url(action_delete.png) !important;
+}
+
+.edit {
+	background-image: url(action_edit.png) !important;
+}
+
+.save {
+	background-image: url(save.png) !important;
+}
+
+.down {
+	background-image: url(arrow_down.png) !important;
+}
+
+.top {
+	background-image: url(arrow_top.png) !important;
+}
+
+.application {
+	background-image: url(application.png) !important;
+}
+
+.back {
+	background-image: url(arrow_back.png) !important;
+}
+
+.open {
+	background-image: url(folder_open.png) !important;
+}
+
+.search {
+	background-image: url(search.png) !important;
+}
+
+.arrow_down {
+	background-image: url(arrow_down.png) !important;
+}
+.sign-out {
+	background-image: url(sign-out.gif) !important;
+}
+.login {
+	background-image: url(login.png) !important;
+}
+.sure {
+	background-image: url(action_check.png) !important;
+}
+.folder {
+	background-image: url(folder.png) !important;
+}
+.application_form {
+	background-image: url(application_form.png) !important;
+}
+.application_form_edit {
+	background-image: url(application_form_edit.png) !important;
+}
+.remove {
+	background-image: url(action_remove.png) !important;
+}
+/*
+PinyinFilter控件上的按钮用到的样式
+*/
+.icon-expand-all {
+	background-image: url(expand-all.gif) !important;
+}
+
+.icon-collapse-all {
+	background-image: url(collapse-all.gif) !important;
+}

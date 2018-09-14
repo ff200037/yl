@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.RoleMenuDao">
+	<select id="getMenuIds" parameterType="string" resultType="java.lang.String">
+		SELECT fk_menu FROM sys_role_menu WHERE fk_role =#{val}
+	</select>
+	<delete id="deleteByRoleId" parameterType="int">
+		delete FROM sys_role_menu WHERE fk_role =#{val}
+	</delete>
+	<delete id="deleteByMenuId" parameterType="string">
+		delete FROM sys_role_menu WHERE fk_menu =#{val}
+	</delete>
+	<insert id="saveRoleMenu" parameterType="java.util.List">
+	INSERT INTO sys_role_menu (
+	id,
+	fk_role,
+	fk_menu
+	)
+	VALUES
+	<foreach collection="list" item="item" index="index" separator=",">
+		(
+		UUID(),#{item.roleId},#{item.menuId})
+	</foreach>	
+    </insert>
+	<select id="getBeforePermiissionIds" parameterType="int" resultType="java.lang.String">
+			SELECT
+				A.fk_permission
+			FROM
+				sys_menu AS A 
+			WHERE A.id in(SELECT fk_menu FROM sys_role_menu WHERE fk_role=#{val})
+			AND A.fk_permission is not null
+	</select>    
+</mapper>

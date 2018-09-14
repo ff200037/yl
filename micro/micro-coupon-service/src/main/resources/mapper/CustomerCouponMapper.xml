@@ -1,0 +1,168 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- t_customer_coupon : 车主优惠券关系表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.coupon.mapper.CustomerCouponMapper">
+
+    <resultMap id="customerCouponResult" type="CustomerCoupon">
+        <result column="id" property="id" jdbcType="OTHER" />
+        <result column="fk_customer_id" property="fkCustomerId" jdbcType="OTHER" />
+        <result column="fk_cp_id" property="fkCpId" jdbcType="OTHER" />
+        <result column="create_time" property="createTime" jdbcType="OTHER" />
+        <result column="use_flag" property="useFlag" jdbcType="OTHER" />
+        <result column="fk_order_id" property="fkOrderId" jdbcType="OTHER" />
+        <result column="fk_coupon_history_id" property="fkCouponHistoryId" jdbcType="OTHER" />
+        <result column="p_be" property="pbe" jdbcType="OTHER" />
+    </resultMap>
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	fk_customer_id ,
+        	fk_cp_id ,
+        	create_time ,
+        	use_flag ,
+        	fk_order_id ,
+        	fk_coupon_history_id ,
+        	p_be 
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="CustomerCoupon" useGeneratedKeys="true" keyProperty="id">
+    	<!-- oracle -->
+    	<!-- 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="id">  
+	        SELECT S_t_customer_coupon.nextval AS ID FROM DUAL  
+	    </selectKey> 
+	     -->
+    <![CDATA[
+        INSERT INTO
+        t_customer_coupon (
+        	id ,
+        	fk_customer_id ,
+        	fk_cp_id ,
+        	create_time ,
+        	use_flag ,
+        	fk_order_id ,
+        	fk_coupon_history_id ,
+        	p_be 
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{fkCustomerId,jdbcType=BIGINT} ,
+        		#{fkCpId,jdbcType=BIGINT} ,
+        		#{createTime,jdbcType=TIMESTAMP} ,
+        		#{useFlag,jdbcType=VARCHAR} ,
+        		#{fkOrderId,jdbcType=BIGINT} ,
+        		#{fkCouponHistoryId,jdbcType=BIGINT} ,
+        		#{pbe,jdbcType=VARCHAR} 
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="customerCoupon">
+    <![CDATA[
+        UPDATE t_customer_coupon SET
+        			fk_customer_id = #{fkCustomerId,jdbcType=BIGINT} ,
+        			fk_cp_id = #{fkCpId,jdbcType=BIGINT} ,
+        			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+        			use_flag = #{useFlag,jdbcType=VARCHAR} ,
+        			fk_order_id	= #{fkOrderId,jdbcType=BIGINT} ,
+	        		fk_coupon_history_id = #{fkCouponHistoryId,jdbcType=BIGINT} ,
+	        		p_be = #{pbe,jdbcType=VARCHAR} 
+	    
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from t_customer_coupon where
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <delete id="batchDeleteByIds" parameterType="java.lang.String">
+    	delete from t_customer_coupon where ID in 
+    	<foreach item="ids" collection="array" open="(" separator="," close=")">
+    	 #{ids}   
+    	</foreach>
+    </delete>
+    
+     <select id="getMaxId" resultType="int">
+		SELECT 
+			MAX(id) as maxId 
+		FROM t_customer_coupon
+	</select>
+    
+    <select id="findById" resultMap="customerCouponResult">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_customer_coupon 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			<if test="id!=null">
+				AND id = #{id}
+			</if>
+			<if test="fkCustomerId!=null">
+				AND fk_customer_id = #{fkCustomerId}
+			</if>
+			<if test="fkCpId!=null">
+				AND fk_cp_id = #{fkCpId}
+			</if>
+			<if test="createTime!=null">
+				AND create_time = #{createTime}
+			</if>
+			<if test="useFlag!=null">
+				AND use_flag = #{useFlag}
+			</if>
+			<if test="fkOrderId!=null">
+				AND fk_order_id	= #{fkOrderId} 
+			</if>
+			<if test="fkCouponHistoryId!=null">
+				fk_coupon_history_id = #{fkCouponHistoryId}
+			</if>
+			<if test="pbe!=null">
+	        	p_be = #{pbe} 
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="CustomerCoupon" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from t_customer_coupon
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>
+    
+    
+    <select id="findPage" resultMap="customerCouponResult" parameterType="CustomerCoupon">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_customer_coupon 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+    
+    
+    <select id="queryList" resultMap="customerCouponResult" parameterType="CustomerCoupon">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_customer_coupon 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+
+	
+</mapper>

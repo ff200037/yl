@@ -1,0 +1,192 @@
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- t_price : 定价表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.order.mapper.PriceMapper">
+
+    <resultMap id="priceResult" type="Price">
+        <result column="id" property="id" jdbcType="OTHER"/>
+        <result column="price_name" property="priceName" jdbcType="OTHER"/>
+        <result column="rescue_object" property="rescueObject" jdbcType="OTHER"/>
+        <result column="basics_charging" property="basicsCharging" jdbcType="OTHER"/>
+        <result column="additional_charging" property="additionalCharging" jdbcType="OTHER"/>
+        <result column="service_mileage" property="serviceMileage" jdbcType="OTHER"/>
+        <result column="exceed_charging" property="exceedCharging" jdbcType="OTHER"/>
+        <result column="exceed_charging_mileage" property="exceedChargingMileage" jdbcType="OTHER"/>
+        <result column="charging_explain" property="chargingExplain" jdbcType="OTHER"/>
+        <result column="creater" property="creater" jdbcType="OTHER"/>
+        <result column="create_time" property="createTime" jdbcType="OTHER"/>
+        <result column="updater" property="updater" jdbcType="OTHER"/>
+        <result column="update_time" property="updateTime" jdbcType="OTHER"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+
+	    select
+        	id ,
+        	price_name ,
+        	rescue_object ,
+        	basics_charging ,
+        	additional_charging ,
+        	service_mileage ,
+        	exceed_charging ,
+        	exceed_charging_mileage ,
+        	charging_explain ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+
+        ]]>
+	</sql>
+
+    <insert id="insert" parameterType="Price" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+
+        INSERT INTO
+        t_price (
+        	id ,
+        	price_name ,
+        	rescue_object ,
+        	basics_charging ,
+        	additional_charging ,
+        	service_mileage ,
+        	exceed_charging ,
+        	exceed_charging_mileage ,
+        	charging_explain ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{priceName,jdbcType=VARCHAR} ,
+        		#{rescueObject,jdbcType=VARCHAR} ,
+       			#{basicsCharging,jdbcType=DOUBLE} ,
+        		#{additionalCharging,jdbcType=VARCHAR} ,
+        		#{serviceMileage,jdbcType=INTEGER} ,
+       			#{exceedCharging,jdbcType=DOUBLE} ,
+        		#{exceedChargingMileage,jdbcType=VARCHAR} ,
+        		#{chargingExplain,jdbcType=VARCHAR} ,
+        		#{creater,jdbcType=VARCHAR} ,
+        		#{createTime,jdbcType=TIMESTAMP} ,
+        		#{updater,jdbcType=VARCHAR} ,
+        		#{updateTime,jdbcType=TIMESTAMP} 
+        )
+
+        ]]>
+
+    </insert>
+
+    <update id="update" parameterType="price">
+    <![CDATA[
+
+        UPDATE t_price SET
+        			price_name = #{priceName,jdbcType=VARCHAR} ,
+        			rescue_object = #{rescueObject,jdbcType=VARCHAR} ,
+        			basics_charging = #{basicsCharging,jdbcType=DOUBLE} ,
+        			additional_charging = #{additionalCharging,jdbcType=VARCHAR} ,
+        			service_mileage = #{serviceMileage,jdbcType=INTEGER} ,
+        			exceed_charging = #{exceedCharging,jdbcType=DOUBLE} ,
+        			exceed_charging_mileage = #{exceedChargingMileage,jdbcType=VARCHAR} ,
+        			charging_explain = #{chargingExplain,jdbcType=VARCHAR} ,
+        			updater = #{updater,jdbcType=VARCHAR} ,
+        			update_time = #{updateTime,jdbcType=TIMESTAMP} 
+        WHERE 
+	        id = #{id} 
+
+        ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+
+        delete from t_price where
+        id = #{id} 
+
+        ]]>
+    </delete>
+
+    <select id="queryById" resultMap="priceResult" parameterType="java.lang.Long">
+        <include refid="commonSelectColumnsPrefix"/>
+        <![CDATA[
+	        from t_price 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+    <sql id="dynamicWhere">
+        <where>
+            1=1
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="priceName!=null and priceName!=''">
+                AND price_name = #{priceName}
+            </if>
+            <if test="rescueObject!=null and rescueObject!='' and rescueObject!='0'.toString()">
+                AND rescue_object = #{rescueObject}
+            </if>
+            <if test="basicsCharging!=null">
+                AND basics_charging = #{basicsCharging}
+            </if>
+            <if test="additionalCharging!=null and additionalCharging!=''">
+                AND additional_charging = #{additionalCharging}
+            </if>
+            <if test="serviceMileage!=null">
+                AND service_mileage = #{serviceMileage}
+            </if>
+            <if test="exceedCharging!=null">
+                AND exceed_charging = #{exceedCharging}
+            </if>
+            <if test="exceedChargingMileage!=null">
+                AND exceed_charging_mileage = #{exceedChargingMileage}
+            </if>
+            <if test="chargingExplain!=null and chargingExplain!=''">
+                AND charging_explain = #{chargingExplain}
+            </if>
+            <if test="creater!=null">
+                AND creater = #{creater}
+            </if>
+            <if test="createTime!=null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="updater!=null">
+                AND updater = #{updater}
+            </if>
+            <if test="updateTime!=null">
+                AND update_time = #{updateTime}
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryCount" parameterType="Price" resultType="int">
+        <![CDATA[
+        select 
+        count(*)
+        from t_price
+    ]]>
+        <include refid="dynamicWhere"/>
+    </select>
+
+    <select id="queryList" resultMap="priceResult" parameterType="Price">
+        <include refid="commonSelectColumnsPrefix"/>
+        <![CDATA[
+	        from t_price 
+	    ]]>
+        <include refid="dynamicWhere"/>
+    </select>
+
+    <select id="getListData" resultMap="priceResult" parameterType="map">
+        <include refid="commonSelectColumnsPrefix"/>
+        <![CDATA[
+	        from t_price
+	    ]]>
+        <include refid="dynamicWhere"/>
+    </select>
+
+</mapper>

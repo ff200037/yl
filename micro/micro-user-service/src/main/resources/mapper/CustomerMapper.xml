@@ -1,0 +1,195 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- t_customer : 用户主表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.user.mapper.CustomerMapper">
+
+    <resultMap id="customerResult" type="Customer">
+        <result column="id" property="customerId" jdbcType="OTHER" />
+        <result column="user_name" property="userName" jdbcType="OTHER" />
+        <result column="sex" property="sex" jdbcType="OTHER" />
+        <result column="age" property="age" jdbcType="OTHER" />
+        <result column="birthday" property="birthday" jdbcType="OTHER" />
+        <result column="id_card" property="idCard" jdbcType="OTHER" />
+        <result column="user_number" property="userNumber" jdbcType="OTHER" />
+        <result column="login_account" property="loginAccount" jdbcType="OTHER" />
+        <result column="login_password" property="loginPassword" jdbcType="OTHER" />
+        <result column="work_type" property="workType" jdbcType="OTHER" />
+        <result column="contact_address" property="contactAddress" jdbcType="OTHER" />
+        <result column="creater" property="creater" jdbcType="OTHER" />
+        <result column="create_time" property="createTime" jdbcType="OTHER" />
+        <result column="updater" property="updater" jdbcType="OTHER" />
+        <result column="update_time" property="updateTime" jdbcType="OTHER" />
+        
+       
+        
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	user_name ,
+        	sex ,
+        	age ,
+        	birthday ,
+        	id_card ,
+        	user_number ,
+        	login_account ,
+        	login_password ,
+        	work_type ,
+        	contact_address ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="Customer" useGeneratedKeys="true" keyProperty="customerId">
+    <![CDATA[
+        INSERT INTO
+        t_customer (
+        	user_name ,
+        	sex ,
+        	age ,
+        	birthday ,
+        	id_card ,
+        	user_number ,
+        	login_account ,
+        	login_password ,
+        	work_type ,
+        	contact_address ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+        ) VALUES (
+        		#{userName,jdbcType=VARCHAR} ,
+        		#{sex,jdbcType=VARCHAR} ,
+       			#{age,jdbcType=DOUBLE} ,
+        		#{birthday,jdbcType=TIMESTAMP} ,
+        		#{idCard,jdbcType=VARCHAR} ,
+        		#{userNumber,jdbcType=VARCHAR} ,
+        		#{loginAccount,jdbcType=VARCHAR} ,
+        		#{loginPassword,jdbcType=VARCHAR} ,
+        		#{workType,jdbcType=VARCHAR} ,
+        		#{contactAddress,jdbcType=VARCHAR} ,
+        		#{creater,jdbcType=VARCHAR} ,
+        		#{createTime,jdbcType=TIMESTAMP} ,
+        		#{updater,jdbcType=VARCHAR} ,
+        		#{updateTime,jdbcType=TIMESTAMP} 
+        )
+    ]]>
+
+    </insert>  
+
+    <update id="update" parameterType="customer">
+    <![CDATA[
+        UPDATE t_customer SET
+        			user_name = #{userName,jdbcType=VARCHAR} ,
+        			sex = #{sex,jdbcType=VARCHAR} ,
+        			age = #{age,jdbcType=DOUBLE} ,
+        			birthday = #{birthday,jdbcType=TIMESTAMP} ,
+        			id_card = #{idCard,jdbcType=VARCHAR} ,
+        			user_number = #{userNumber,jdbcType=VARCHAR} ,
+        			login_account = #{loginAccount,jdbcType=VARCHAR} ,
+        			login_password = #{loginPassword,jdbcType=VARCHAR} ,
+        			work_type = #{workType,jdbcType=VARCHAR} ,
+        			contact_address = #{contactAddress,jdbcType=VARCHAR} ,
+        			creater = #{creater,jdbcType=VARCHAR} ,
+        			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+        			updater = #{updater,jdbcType=VARCHAR} ,
+        			update_time = #{updateTime,jdbcType=TIMESTAMP} 
+        WHERE 
+	        id = #{customerId} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from t_customer where
+        id = #{customerId} 
+    ]]>
+    </delete>
+    
+    <select id="queryById" resultMap="customerResult">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_customer 
+	        where 
+		        id = #{customerId} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			<if test="id!=null">
+				AND id = #{customerId}
+			</if>
+			<if test="userName!=null">
+				AND user_name = #{userName}
+			</if>
+			<if test="sex!=null">
+				AND sex = #{sex}
+			</if>
+			<if test="age!=null">
+				AND age = #{age}
+			</if>
+			<if test="birthday!=null">
+				AND birthday = #{birthday}
+			</if>
+			<if test="idCard!=null">
+				AND id_card = #{idCard}
+			</if>
+			<if test="userNumber!=null">
+				AND user_number = #{userNumber}
+			</if>
+			<if test="loginAccount!=null">
+				AND login_account = #{loginAccount}
+			</if>
+			<if test="loginPassword!=null">
+				AND login_password = #{loginPassword}
+			</if>
+			<if test="workType!=null">
+				AND work_type = #{workType}
+			</if>
+			<if test="contactAddress!=null">
+				AND contact_address = #{contactAddress}
+			</if>
+			<if test="creater!=null">
+				AND creater = #{creater}
+			</if>
+			<if test="createTime!=null">
+				AND create_time = #{createTime}
+			</if>
+			<if test="updater!=null">
+				AND updater = #{updater}
+			</if>
+			<if test="updateTime!=null">
+				AND update_time = #{updateTime}
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="Customer" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from t_customer
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>  
+    
+    <select id="queryList" resultMap="customerResult" parameterType="Customer">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_customer 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+	
+</mapper>

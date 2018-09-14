@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.ExceptionInfoDao">
+
+
+	<insert id="save" parameterType="com.yile.micro.controller.system.bean.ExceptionInfo">
+		INSERT INTO sys_exception_info (id,exception_detail,create_date) VALUES
+		(uuid(),#{exceptionDetail},now())
+
+	</insert>
+</mapper>

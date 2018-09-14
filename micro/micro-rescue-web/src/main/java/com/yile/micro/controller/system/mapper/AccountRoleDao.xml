@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.AccountRoleDao">
+	<resultMap id="BaseResultMap" type="com.yile.micro.controller.system.bean.AccountRole">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="fk_account" property="fkAccount" jdbcType="VARCHAR" />
+		<result column="fk_role" property="fkRole" jdbcType="INTEGER" />
+	</resultMap>
+	<insert id="saveAccountRole" parameterType="java.util.Map">
+		INSERT INTO sys_account_role (id,fk_account,fk_role) VALUES (uuid(),#{fkAccount},#{fkRole})
+	</insert>
+	<sql id="whereSql">
+		<if test="accountId !=null and accountId != ''">
+			B.id=#{accountId}
+		</if>
+	</sql>
+	<select id="getListData" parameterType="java.util.Map"
+		resultType="java.util.Map">
+			SELECT
+				A.id,
+				B.account_name as accountName,
+				C.role_name as roleName,
+				C.remark
+			FROM
+				sys_account_role AS A
+			INNER JOIN sys_account AS B ON A.fk_account = B.id
+			INNER JOIN sys_role AS C ON A.fk_role = C.id
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+			limit ${start},${limit}
+	</select>
+  <select id="getListDataCount" parameterType="java.util.Map" resultType="long">
+			SELECT
+				COUNT(1) 
+			FROM
+				sys_account_role AS A
+			INNER JOIN sys_account AS B ON A.fk_account = B.id
+			INNER JOIN sys_role AS C ON A.fk_role = C.id
+		<where>
+			<include refid="whereSql"></include>
+		</where>  	
+  </select>	
+  <select id="findCount" parameterType="java.util.Map" resultType="java.lang.Long">
+  	SELECT COUNT(1) FROM sys_account_role WHERE fk_role=#{fkRole} AND fk_account=#{fkAccount}
+  </select>	
+  <delete id="delById" parameterType="string">
+  	delete FROM sys_account_role where id=#{id}
+  </delete>
+</mapper>

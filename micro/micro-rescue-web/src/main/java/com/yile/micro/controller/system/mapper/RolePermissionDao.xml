@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.RolePermissionDao">
+	<resultMap id="BaseResultMap" type="com.yile.micro.controller.system.bean.RolePermission">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="fk_role" property="fkRole" jdbcType="INTEGER" />
+		<result column="fk_permission" property="fkPermission"
+			jdbcType="INTEGER" />
+	</resultMap>
+	<select id="getPermissionIds" parameterType="string" resultType="java.lang.String">
+		SELECT fk_permission FROM sys_role_permission WHERE fk_role =#{val}
+	</select>
+	<delete id="deleteByRoleId" parameterType="int">
+		delete FROM sys_role_permission WHERE fk_role =#{val}
+	</delete>
+	<delete id="deleteByPermissionId" parameterType="string">
+		delete FROM sys_role_permission WHERE fk_permission =#{val}
+	</delete>
+	<delete id="deleteByPermissionIds" parameterType="java.util.Map">
+		delete FROM sys_role_permission WHERE fk_role =#{roleId} and fk_permission in(
+			<foreach collection="list" item="item" index="index" separator=",">
+				#{item}
+			</foreach>			
+		)
+	</delete>
+	<insert id="saveRolePermission" parameterType="java.util.List">
+		INSERT INTO sys_role_permission (
+		id,
+		fk_role,
+		fk_permission
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			UUID(),#{item.roleId},#{item.perId})
+		</foreach>	
+    </insert>
+    <select id="findAccountPermissionPaths" parameterType="string" resultType="java.lang.String">
+		SELECT
+		DISTINCT(B.permission_path)
+		FROM
+		sys_role_permission AS A
+		INNER JOIN sys_permission AS B ON A.fk_permission = B.id
+		WHERE
+		A.fk_role IN ((SELECT fk_role FROM sys_account_role WHERE fk_account=#{val}))
+		AND B.permission_path is not null    
+    </select>
+</mapper>

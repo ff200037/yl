@@ -1,0 +1,222 @@
+<#include "/rest/include/macro.include"/>
+<#assign className = table.className>   
+<#assign classNameLower = className?uncap_first> 
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- ${table.sqlName} : ${table.remarks} mybatis 配置  -->
+<mapper namespace="${basepackage}.mapper.${className}Mapper">
+
+    <resultMap id="${classNameLower}Result" type="${className}">
+        <#list table.columns as column>
+        <result column="${column.sqlName}" property="${column.columnNameLower}" jdbcType="OTHER" />
+		</#list>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        <#list table.columns as column>
+        	${column.sqlName} <#if column_has_next>,</#if>
+        </#list>
+	    ]]>
+	</sql>
+
+    <insert id="add" parameterType="${className}" useGeneratedKeys="true" keyProperty="id">
+    	<!-- oracle -->
+    	<!-- 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="id">  
+	        SELECT S_${table.sqlName}.nextval AS ID FROM DUAL  
+	    </selectKey> 
+	     -->
+    <![CDATA[
+        INSERT INTO
+        ${table.sqlName} (
+        <#list table.columns as column>
+        	${column.sqlName} <#if column_has_next>,</#if>
+        </#list>
+        ) VALUES (
+        <#list table.columns as column>
+        	<#if column.sqlTypeName=='NVARCHAR2'>
+        		#${r"{"}${column.columnNameLower},jdbcType=VARCHAR${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='bigint'>
+        		#${r"{"}${column.columnNameLower},jdbcType=BIGINT${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='varchar'>
+        		#${r"{"}${column.columnNameLower},jdbcType=VARCHAR${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='LONGTEXT'>
+        		#${r"{"}${column.columnNameLower},jdbcType=VARCHAR${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='longtext'>
+        		#${r"{"}${column.columnNameLower},jdbcType=VARCHAR${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='int'>
+        		#${r"{"}${column.columnNameLower},jdbcType=INTEGER${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='NUMBER'>
+        		#${r"{"}${column.columnNameLower},jdbcType=INTEGER${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='timestamp'>
+       			#${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+       		<#elseif column.sqlTypeName=='TIMESTAMP'>
+       			#${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+       		<#elseif column.sqlTypeName=='double'>
+       			#${r"{"}${column.columnNameLower},jdbcType=DOUBLE${r"}"} <#if column_has_next>,</#if>
+       		<#elseif column.sqlTypeName=='decimal'>
+       			#${r"{"}${column.columnNameLower},jdbcType=DOUBLE${r"}"} <#if column_has_next>,</#if>
+       		<#elseif column.sqlTypeName=='DECIMAL'>
+       			#${r"{"}${column.columnNameLower},jdbcType=DOUBLE${r"}"} <#if column_has_next>,</#if>
+       		<#elseif column.sqlTypeName=='DOUBLE'>
+       			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=DOUBLE${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='DATE'>
+        		#${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='date'>
+        		#${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='DATETIME'>
+        		#${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+        	<#elseif column.sqlTypeName=='datetime'>
+        		#${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+        	<#else>
+        		#${r"{"}${column.columnNameLower},jdbcType=${column.sqlTypeName}${r"}"} <#if column_has_next>,</#if>
+        	</#if>
+        </#list>        
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="${classNameLower}">
+    <![CDATA[
+        UPDATE ${table.sqlName} SET
+	        <#list table.columns as column>
+	        <#if !column.pk>
+	        	<#if column.sqlTypeName=='NVARCHAR2'>
+	        		${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=VARCHAR${r"}"} <#if column_has_next>,</#if>
+	        	<#elseif column.sqlTypeName=='NUMBER'>
+	        		${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=INTEGER${r"}"} <#if column_has_next>,</#if>
+	        	<#elseif column.sqlTypeName=='bigint'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=BIGINT${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='varchar'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=VARCHAR${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='LONGTEXT'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=VARCHAR${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='longtext'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=VARCHAR${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='int'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=INTEGER${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='NUMBER'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=INTEGER${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='DATE'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='date'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='DATETIME'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='timestamp'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='TIMESTAMP'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='double'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=DOUBLE${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='decimal'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=DOUBLE${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='DECIMAL'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=DOUBLE${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='DOUBLE'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=DOUBLE${r"}"} <#if column_has_next>,</#if>
+        		<#elseif column.sqlTypeName=='datetime'>
+        			${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=TIMESTAMP${r"}"} <#if column_has_next>,</#if>
+	        	<#else>
+	        		${column.sqlName} = #${r"{"}${column.columnNameLower},jdbcType=${column.sqlTypeName}${r"}"} <#if column_has_next>,</#if>
+	        	</#if>
+	        </#if>
+	        </#list>
+        WHERE 
+        	<#list table.compositeIdColumns as column>
+	        ${column.sqlName} = #${r"{"}${column.columnNameLower}${r"}"} <#if column_has_next>,</#if>
+	        </#list>
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from ${table.sqlName} where
+        <#list table.compositeIdColumns as column>
+        ${column.sqlName} = #${r"{"}${column.columnNameLower}${r"}"} <#if column_has_next>,</#if>
+		</#list>
+    ]]>
+    </delete>
+    
+    <delete id="batchDeleteByIds" parameterType="java.lang.String">
+    	delete from ${table.sqlName} where ID in 
+    	<foreach item="ids" collection="array" open="(" separator="," close=")">
+    	 #${r"{"}ids${r"}"}   
+    	</foreach>
+    </delete>
+    
+     <select id="getMaxId" resultType="int">
+		SELECT 
+			<#list table.compositeIdColumns as column>
+			MAX(${column.sqlName}) as maxId 
+			</#list>
+		FROM ${table.sqlName}
+	</select>
+    
+    <select id="getById" resultMap="${classNameLower}Result">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from ${table.sqlName} 
+	        where 
+				<#list table.compositeIdColumns as column>
+		        ${column.sqlName} = #${r"{"}${column.columnNameLower}${r"}"} <#if column_has_next>,</#if>
+		        </#list>
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+		     <#list table.columns as column>
+			<if test="${column.columnNameLower}!=null">
+				AND ${column.sqlName} = #${r"{"}${column.columnNameLower}${r"}"}
+			</if>
+			</#list>
+		</where>
+	</sql>
+	 
+    <select id="count" parameterType="${className}" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from ${table.sqlName}
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>
+    
+    
+    <select id="findByPage" resultMap="${classNameLower}Result" parameterType="${className}">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from ${table.sqlName} 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+    
+    
+    <select id="findAll" resultMap="${classNameLower}Result" parameterType="${className}">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from ${table.sqlName} 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+
+    <#list table.columns as column>
+    <#if column.unique && !column.pk>
+    <select id="getBy${column.columnName}" resultMap="${classNameLower}Result" parameterType="${column.javaType}">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from ${table.sqlName} where ${column.sqlName} = #${r"{"}{${column.columnNameLower}${r"}"}
+	    ]]>
+    </select>
+    </#if>
+	</#list>
+	
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/micro-coupon" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/micro-coupon-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/micro-order-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/micro-rescue-web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/micro-system" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/micro-system-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/micro-user" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/micro-user-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/micro-web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/reverse-engineering" charset="UTF-8" />
+  </component>
+</project>

@@ -1,0 +1,259 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- t_coupon : 优惠券表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.coupon.mapper.CouponMapper">
+
+    <resultMap id="couponResult" type="Coupon">
+        <result column="id" property="id" jdbcType="OTHER" />
+        <result column="cpn_name" property="cpnName" jdbcType="OTHER" />
+        <result column="cpn_no" property="cpnNo" jdbcType="OTHER" />
+        <result column="cpn_type" property="cpnType" jdbcType="OTHER" />
+        <result column="cpn_amt" property="cpnAmt" jdbcType="OTHER" />
+        <result column="date_type" property="dateType" jdbcType="OTHER" />
+        <result column="eft_date" property="eftDate" jdbcType="OTHER" />
+        <result column="inv_date" property="invDate" jdbcType="OTHER" />
+        <result column="eft_len" property="eftLen" jdbcType="OTHER" />
+        <result column="cpn_num" property="cpnNum" jdbcType="OTHER" />
+        <result column="lim_get_num" property="limGetNum" jdbcType="OTHER" />
+        <result column="alrdy_get_num" property="alrdyGetNum" jdbcType="OTHER" />
+        <result column="cpn_marks" property="cpnMarks" jdbcType="OTHER" />
+        <result column="cpn_status" property="cpnStatus" jdbcType="OTHER" />
+        <result column="use_cond_type" property="useCondType" jdbcType="OTHER" />
+        <result column="mj_money" property="mjMoney" jdbcType="OTHER" />
+        <result column="cust_range_type" property="custRangeType" jdbcType="OTHER" />
+        <result column="prod_range_type" property="prodRangeType" jdbcType="OTHER" />
+        <result column="area_range_type" property="areaRangeType" jdbcType="OTHER" />
+        <result column="area_range" property="areaRange" jdbcType="OTHER" />
+        <result column="cust_range" property="custRange" jdbcType="OTHER" />
+        <result column="p_be" property="pbe" jdbcType="OTHER" />
+        <result column="qr_code" property="qrCode" jdbcType="OTHER" />
+        <result column="creater" property="creater" jdbcType="OTHER" />
+        <result column="create_time" property="createTime" jdbcType="OTHER" />
+        <result column="updater" property="updater" jdbcType="OTHER" />
+        <result column="update_time" property="updateTime" jdbcType="OTHER" />
+    	<result column="ascription_platform" property="ascriptionPlatform" jdbcType="OTHER"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	cpn_name ,
+        	cpn_no ,
+        	cpn_type ,
+        	cpn_amt ,
+        	date_type ,
+        	eft_date ,
+        	inv_date ,
+        	eft_len ,
+        	cpn_num ,
+        	lim_get_num ,
+        	alrdy_get_num ,
+        	cpn_marks ,
+        	cpn_status ,
+        	use_cond_type ,
+        	mj_money ,
+        	cust_range_type ,
+        	prod_range_type ,
+        	area_range_type ,
+        	area_range ,
+        	cust_range ,
+        	p_be ,
+        	qr_code ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="Coupon" useGeneratedKeys="true" keyProperty="id">
+    	<!-- oracle -->
+    	<!-- 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="id">  
+	        SELECT S_t_coupon.nextval AS ID FROM DUAL  
+	    </selectKey> 
+	     -->
+    <![CDATA[
+        INSERT INTO
+        t_coupon (
+        	id ,
+        	cpn_name ,
+        	cpn_no ,
+        	cpn_type ,
+        	cpn_amt ,
+        	date_type ,
+        	eft_date ,
+        	inv_date ,
+        	eft_len ,
+        	cpn_num ,
+        	lim_get_num ,
+        	alrdy_get_num ,
+        	cpn_marks ,
+        	cpn_status ,
+        	use_cond_type ,
+        	mj_money ,
+        	cust_range_type ,
+        	prod_range_type ,
+        	area_range_type ,
+        	area_range ,
+        	cust_range ,
+        	p_be ,
+        	qr_code ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time,
+        	ascription_platform 
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{cpnName,jdbcType=VARCHAR} ,
+        		#{cpnNo,jdbcType=VARCHAR} ,
+        		#{cpnType,jdbcType=VARCHAR} ,
+       			#{cpnAmt,jdbcType=DOUBLE} ,
+        		#{dateType,jdbcType=VARCHAR} ,
+        		#{eftDate,jdbcType=TIMESTAMP} ,
+        		#{invDate,jdbcType=TIMESTAMP} ,
+       			#{eftLen,jdbcType=DOUBLE} ,
+       			#{cpnNum,jdbcType=DOUBLE} ,
+       			#{limGetNum,jdbcType=DOUBLE} ,
+       			#{alrdyGetNum,jdbcType=DOUBLE} ,
+        		#{cpnMarks,jdbcType=VARCHAR} ,
+        		#{cpnStatus,jdbcType=VARCHAR} ,
+        		#{useCondType,jdbcType=VARCHAR} ,
+       			#{mjMoney,jdbcType=DOUBLE} ,
+        		#{custRangeType,jdbcType=VARCHAR} ,
+        		#{prodRangeType,jdbcType=VARCHAR} ,
+        		#{areaRangeType,jdbcType=VARCHAR} ,
+        		#{areaRange,jdbcType=VARCHAR} ,
+        		#{custRange,jdbcType=VARCHAR} ,
+        		#{pbe,jdbcType=VARCHAR} ,
+        		#{qrCode,jdbcType=VARCHAR} ,
+        		#{creater,jdbcType=VARCHAR} ,
+        		#{createTime,jdbcType=TIMESTAMP} ,
+        		#{updater,jdbcType=VARCHAR} ,
+        		#{updateTime,jdbcType=TIMESTAMP} ,
+        		#{ascriptionPlatform,jdbcType=VARCHAR}
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="Coupon">
+    <![CDATA[
+        UPDATE t_coupon SET
+        			cpn_name = #{cpnName,jdbcType=VARCHAR} ,
+        			cpn_no = #{cpnNo,jdbcType=VARCHAR} ,
+        			cpn_type = #{cpnType,jdbcType=VARCHAR} ,
+        			cpn_amt = #{cpnAmt,jdbcType=DOUBLE} ,
+        			date_type = #{dateType,jdbcType=VARCHAR} ,
+        			eft_date = #{eftDate,jdbcType=TIMESTAMP} ,
+        			inv_date = #{invDate,jdbcType=TIMESTAMP} ,
+        			eft_len = #{eftLen,jdbcType=DOUBLE} ,
+        			cpn_num = #{cpnNum,jdbcType=DOUBLE} ,
+        			lim_get_num = #{limGetNum,jdbcType=DOUBLE} ,
+        			alrdy_get_num = #{alrdyGetNum,jdbcType=DOUBLE} ,
+        			cpn_marks = #{cpnMarks,jdbcType=VARCHAR} ,
+        			cpn_status = #{cpnStatus,jdbcType=VARCHAR} ,
+        			use_cond_type = #{useCondType,jdbcType=VARCHAR} ,
+        			mj_money = #{mjMoney,jdbcType=DOUBLE} ,
+        			cust_range_type = #{custRangeType,jdbcType=VARCHAR} ,
+        			prod_range_type = #{prodRangeType,jdbcType=VARCHAR} ,
+        			area_range_type = #{areaRangeType,jdbcType=VARCHAR} ,
+        			area_range = #{areaRange,jdbcType=VARCHAR} ,
+        			cust_range = #{custRange,jdbcType=VARCHAR} ,
+        			p_be = #{pbe,jdbcType=VARCHAR} ,
+        			qr_code = #{qrCode,jdbcType=VARCHAR} ,
+        			creater = #{creater,jdbcType=VARCHAR} ,
+        			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+        			updater = #{updater,jdbcType=VARCHAR} ,
+        			update_time = #{updateTime,jdbcType=TIMESTAMP} ,
+        			ascription_platform = #{ascriptionPlatform,jdbcType=VARCHAR}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from t_coupon where
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <delete id="batchDeleteByIds" parameterType="java.lang.String">
+    	delete from t_coupon where ID in 
+    	<foreach item="ids" collection="array" open="(" separator="," close=")">
+    	 #{ids}   
+    	</foreach>
+    </delete>
+    
+     <select id="getMaxId" resultType="int">
+		SELECT 
+			MAX(id) as maxId 
+		FROM t_coupon
+	</select>
+    
+    <select id="queryById" resultMap="couponResult" >
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_coupon 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			
+			<if test="cpnName !=null and cpnName != ''">
+				and cpn_name = #{cpnName}
+			</if>
+			<if test="cpnType !=null and cpnType != ''">
+				and cpn_type = #{cpnType}
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="Coupon" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from t_coupon
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>
+    
+    
+    <select id="queryPage" resultMap="couponResult" parameterType="Coupon">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_coupon 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+    
+    
+    <select id="queryList" resultMap="couponResult" parameterType="Coupon">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_coupon 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+	
+	<!--停用-->
+	<update id="couponBlockUp" parameterType="Long">
+		 update t_coupon set  cpn_status ='0' where id = {id}
+	</update>
+	
+	<!--启用-->
+	<update id="couponUse" parameterType="Long">
+		 update t_coupon set  cpn_status ='1' where id = {id}
+	</update>
+	
+</mapper>

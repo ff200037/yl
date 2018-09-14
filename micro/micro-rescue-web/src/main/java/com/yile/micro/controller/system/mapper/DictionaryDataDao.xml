@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.DictionaryDataDao">
+	<resultMap id="BaseResultMap"
+		type="com.yile.micro.controller.system.bean.DictionaryData">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="fk_dictionary" property="fkDictionary"
+			jdbcType="VARCHAR" />
+		<result column="dictdata_name" property="dictdataName"
+			jdbcType="VARCHAR" />
+		<result column="dictdata_value" property="dictdataValue"
+			jdbcType="VARCHAR" />
+		<result column="is_enable" property="isEnable" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<insert id="saveDictionaryData" parameterType="java.util.Map">
+		INSERT INTO sys_dictionary_data
+		(fk_dictionary,dictdata_name,dictdata_value,is_enable,remark,create_date)
+		VALUES
+		(#{fkDictionary},#{dictdataName},#{dictdataValue},#{isEnable},#{remark},now())
+	</insert>	
+	<sql id="whereSql">
+		<if test="dictionaryCode !=null and dictionaryCode != ''">
+			B.dictionary_code=#{dictionaryCode}
+		</if>
+	</sql>
+	<select id="getListData" parameterType="java.util.Map"
+		resultType="java.util.Map">
+			SELECT
+				A.id,
+				A.is_enable as isEnable,
+				A.dictdata_name as dictdataName,
+				A.dictdata_value as dictdataValue,
+				A.remark,
+				DATE_FORMAT(A.create_date, "%Y-%m-%d %H:%i") AS createDate,
+				B.dictionary_name as dictionaryName,
+				B.dictionary_code as dictionaryCode
+			FROM
+				sys_dictionary_data AS A
+			INNER JOIN sys_dictionary AS B ON A.fk_dictionary = B.id
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+			ORDER BY A.id desc
+			limit ${start},${limit}
+	</select>
+	<select id="getListDataCount" parameterType="java.util.Map"
+		resultType="long">
+			SELECT COUNT(1)
+			FROM
+				sys_dictionary_data AS A
+			INNER JOIN sys_dictionary AS B ON A.fk_dictionary = B.id		
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+	</select>
+	<select id="getById" parameterType="int" resultType="java.util.Map">
+		SELECT
+			A.id,
+			A.fk_dictionary AS fkDictionary,
+			(SELECT dictionary_name FROM sys_dictionary WHERE id=A.fk_dictionary) as dictionaryName,
+			A.dictdata_name AS dictdataName,
+			A.dictdata_value AS dictdataValue,
+			A.is_enable as isEnable,
+			A.remark
+		FROM
+			sys_dictionary_data AS A
+		WHERE
+			A.id=#{val}	
+	</select>
+	<update id="updateDictionaryData" parameterType="java.util.Map">
+		UPDATE sys_dictionary_data set
+		dictdata_name=#{dictdataName},dictdata_value=#{dictdataValue},is_enable=#{isEnable},remark=#{remark}
+		where id=#{id}
+	</update>
+  <delete id="delById" parameterType="int">
+  	delete FROM sys_dictionary_data where id=#{id}
+  </delete>		
+  <select id="getListDataByCode" parameterType="string" resultType="map">
+		SELECT
+			A.dictdata_name AS name,
+			A.dictdata_value AS id
+		FROM
+			sys_dictionary_data AS A
+		INNER JOIN sys_dictionary AS B ON A.fk_dictionary = B.id
+		WHERE
+			B.dictionary_code=#{code}
+			and A.is_enable='T'
+  </select>
+  <select id="getListDataByName" parameterType="map" resultType="map">
+		SELECT
+			A.dictdata_name AS name,
+			A.dictdata_value AS id
+		FROM
+			sys_dictionary_data AS A
+		INNER JOIN sys_dictionary AS B ON A.fk_dictionary = B.id
+		WHERE
+			B.dictionary_code=#{dictionaryCode}
+			and A.is_enable='T'
+			and A.dictdata_name like concat('%',#{dataName},'%')
+  </select>
+</mapper>

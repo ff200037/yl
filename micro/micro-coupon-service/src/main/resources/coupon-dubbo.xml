@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        ">
+
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+<!-- 	<dubbo:application name="micro-coupon-service" />
+ -->	
+	<dubbo:application name="micro-coupon-service" />
+	
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<!-- 暂时用boss测试环境的地址 -->
+	<!--<dubbo:registry address="zookeeper://120.24.85.38:2181?backup=120.25.244.66:2181,120.76.168.70:2181" timeout="100000"/>-->
+	<dubbo:registry address="zookeeper://127.0.0.1:2181" timeout="100000" check="false"/>
+
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="26880" />
+	
+	<!-- 声明需要暴露的服务接口 -->
+	<dubbo:service interface="com.yile.micro.coupon.service.CouponService" ref="couponService" />
+	<dubbo:service interface="com.yile.micro.coupon.service.CouponHistoryService" ref="couponHistoryService" />
+	<dubbo:service interface="com.yile.micro.coupon.service.CustomerCouponService" ref="customerCouponService" />
+	<!-- 消费者缺醒配置 -->
+	<dubbo:consumer  timeout="600000" check="false"/>
+	
+	
+	<!-- 注解暴露接口 -->
+	<!-- <dubbo:annotation package="com.yile.micro" />   -->
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<!-- <dubbo:protocol name="dubbo" port="20880" host="192.168.0.141" /> -->
+	
+	<!-- 这是服务提供者配置 -->
+	<!-- <dubbo:provider protocol="dubbo" retries="0" timeout="1200000" /> -->
+	<!-- <dubbo:provider protocol="dubbo" retries="0" timeout="1200000" host="192.168.0.141" /> -->
+	<!-- 加入spring注解扫描 -->
+	<!-- <context:component-scan base-package="com.yile.micro"/> -->
+	
+</beans>
+

@@ -1,0 +1,134 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- rescue_rescues : 救援人员表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.user.mapper.RescueRescuesMapper">
+
+    <resultMap id="rescueRescuesResult" type="RescueRescues">
+        <result column="id" property="id" jdbcType="OTHER" />
+        <result column="driver_license" property="driverLicense" jdbcType="OTHER" />
+        <result column="driver_type" property="driverType" jdbcType="OTHER" />
+        <result column="fk_rescue_store_id" property="fkRescueStoreId" jdbcType="OTHER" />
+        <result column="fk_t_customer_id" property="fkTcustomerId" jdbcType="OTHER" />
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	driver_license ,
+        	driver_type ,
+        	fk_rescue_store_id ,
+        	fk_t_customer_id 
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="RescueRescues" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO
+        rescue_rescues (
+        	id ,
+        	driver_license ,
+        	driver_type ,
+        	fk_rescue_store_id ,
+        	fk_t_customer_id 
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{driverLicense,jdbcType=VARCHAR} ,
+        		#{driverType,jdbcType=VARCHAR} ,
+        		#{fkRescueStoreId,jdbcType=BIGINT} ,
+        		#{fkTcustomerId,jdbcType=BIGINT} 
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="rescueRescues">
+    <![CDATA[
+        UPDATE rescue_rescues SET
+        			driver_license = #{driverLicense,jdbcType=VARCHAR} ,
+        			driver_type = #{driverType,jdbcType=VARCHAR} ,
+        			fk_rescue_store_id = #{fkRescueStoreId,jdbcType=BIGINT} ,
+        			fk_t_customer_id = #{fkTcustomerId,jdbcType=BIGINT} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from rescue_rescues where
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="queryById" resultMap="rescueRescuesResult">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from rescue_rescues 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			<if test="id!=null">
+				AND id = #{id}
+			</if>
+			<if test="driverLicense!=null">
+				AND driver_license = #{driverLicense}
+			</if>
+			<if test="driverType!=null">
+				AND driver_type = #{driverType}
+			</if>
+			<if test="fkRescueStoreId!=null">
+				AND fk_rescue_store_id = #{fkRescueStoreId}
+			</if>
+			<if test="fkTcustomerId!=null">
+				AND fk_t_customer_id = #{fkTcustomerId}
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="RescueRescues" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from rescue_rescues
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>  
+    
+    <select id="queryList" resultMap="rescueRescuesResult" parameterType="RescueRescues">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from rescue_rescues 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+    
+    <!-- 根据用户ID删除 -->
+    <update id="UpdateByFkTcustomerId" parameterType="rescueRescues">
+    <![CDATA[
+        UPDATE rescue_rescues SET
+        			driver_license = #{driverLicense,jdbcType=VARCHAR} ,
+        			driver_type = #{driverType,jdbcType=VARCHAR} ,
+        			fk_rescue_store_id = #{fkRescueStoreId,jdbcType=BIGINT} ,
+        			fk_t_customer_id = #{fkTcustomerId,jdbcType=BIGINT} 
+        WHERE 
+	        fk_t_customer_id = #{fkTcustomerId} 
+    ]]>
+    </update>
+    
+    <delete id="deleteByIdByFkTcustomerId" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from rescue_rescues where
+        fk_t_customer_id = #{fkTcustomerId} 
+    ]]>
+    </delete>
+	
+</mapper>

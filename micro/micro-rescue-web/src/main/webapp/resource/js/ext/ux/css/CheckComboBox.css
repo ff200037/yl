@@ -1,0 +1,15 @@
+.ux-checkComboBox-icon { 
+    width:16px; 
+    height:16px; 
+    float:left; 
+    background- -1px ! important; 
+    background-repeat:no-repeat ! important; 
+} 
+.ux-checkComboBox-icon-checked { 
+    background: transparent url(../../resources/images/default/menu/checked.gif); 
+} 
+.ux-checkComboBox-icon-unchecked { 
+    background: transparent url(../../resources/images/default/menu/unchecked.gif);
+}
+
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<groups xmlns="http://www.isdc.ro/wro">
+	<group name="all">
+		<css>/resource/js/ext/resources/css/ext-all.css</css>
+		<css>/resource/css/newfontSize.css</css>
+		<css>/resource/icons/icons.css</css>
+		<css>/resource/js/ext/ux/fileuploadfield/css/fileuploadfield.css</css>
+		<css>/resource/js/ext/ux/css/Spinner.css</css>
+		
+		
+		
+		<js>/resource/js/ext/adapter/ext/ext-base.js</js>
+		<js>/resource/js/ext/ext-all.js</js>
+		<js>/resource/js/ext/ext-lang-zh_CN.js</js>
+		<js>/resource/js/ext/ux/Spinner.js</js>
+		<js>/resource/js/ext/ux/SpinnerField.js</js>
+		<js>/resource/js/ext/ux/DateTimeField.js</js>
+		<js>/resource/js/ext/ux/BufferView.js</js>
+		<js>/resource/js/ext/ux/fileuploadfield/FileUploadField.js</js>
+		<js>/resource/js/tool/pageTool.js</js>
+		<js>/resource/js/tool/HtmlPanel.js</js>
+		<js>/resource/js/tool/TreeNodeCheck.js</js>
+		<js>/resource/js/tool/PinyinFilter.js</js>
+		<js>/jsp/common/commonCode.js</js>
+		<js>/jsp/common/UDlib.js</js>
+	</group>
+
+</groups>

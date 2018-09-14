@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/micro-coupon" />
+    <file type="web" url="file://$PROJECT_DIR$/micro-coupon-service" />
+    <file type="web" url="file://$PROJECT_DIR$/micro-order-service" />
+    <file type="web" url="file://$PROJECT_DIR$/micro-system" />
+    <file type="web" url="file://$PROJECT_DIR$/micro-system-service" />
+    <file type="web" url="file://$PROJECT_DIR$/micro-user" />
+    <file type="web" url="file://$PROJECT_DIR$/micro-user-service" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/reverse-engineering/pom.xml" />
+        <option value="$PROJECT_DIR$/micro-order-service/pom.xml" />
+        <option value="$PROJECT_DIR$/micro-reverse/pom.xml" />
+        <option value="$PROJECT_DIR$/micro-rescue-web/pom.xml" />
+        <option value="$PROJECT_DIR$/micro-system-service/pom.xml" />
+        <option value="$PROJECT_DIR$/micro-user-service/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/classes" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="trunkUrl" value="svn://120.24.70.174/RESUCE_CODE/micro" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+</project>

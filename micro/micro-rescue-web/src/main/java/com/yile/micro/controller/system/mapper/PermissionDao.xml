@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.PermissionDao">
+	<resultMap id="BaseResultMap" type="com.yile.micro.controller.system.bean.Permission">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="fk_application" property="fkApplication"
+			jdbcType="INTEGER" />
+		<result column="fk_pid" property="fkPid" jdbcType="VARCHAR" />
+		<result column="permission_name" property="permissionName"
+			jdbcType="VARCHAR" />
+		<result column="permission_type" property="permissionType"
+			jdbcType="VARCHAR" />
+		<result column="permission_path" property="permissionPath"
+			jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="is_folder" property="isFolder" jdbcType="VARCHAR" />
+		<result column="is_built_in" property="isBuiltIn" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getAllPermission" resultMap="BaseResultMap">
+		SELECT * FROM sys_permission
+	</select>
+	<select id="findPermissionByPath" parameterType="string" resultMap="BaseResultMap">
+		SELECT * FROM sys_permission where permission_path=#{val}
+	</select>
+	<select id="getById" parameterType="string" resultType="java.util.Map">
+			SELECT
+				A.id AS id,
+				A.fk_pid AS fkPid,
+				(SELECT permission_name FROM sys_permission WHERE id=A.fk_pid) as fkPidName,
+				A.permission_name AS permissionName,
+				A.is_folder AS isFolder,
+				A.permission_type AS permissionType,
+				A.permission_path AS permissionPath,
+				A.remark AS remark,
+				A.is_built_in as isBuiltIn,
+				A.fk_application as fkApplication,
+				B.app_name AS appName,
+				B.app_code AS appCode,
+				B.app_webpath AS appWebpath,
+				B.remark AS remark,
+				B.use_state AS useState
+			FROM
+				sys_permission AS A
+			LEFT JOIN sys_application AS B ON A.fk_application = B.id
+			where A.id=#{id}
+	</select>	
+	<sql id="whereSql">
+		( A.fk_pid=#{id} or A.id=#{id} )
+	</sql>
+	<select id="getListData" parameterType="java.util.Map"
+		resultType="java.util.Map">
+			SELECT
+				A.id AS id,
+				(SELECT permission_name FROM sys_permission WHERE id=A.fk_pid) as parentPermissionName,
+				A.permission_name AS permissionName,
+				A.is_folder AS isFolder,
+				A.permission_type AS permissionType,
+				A.permission_path AS permissionPath,
+				A.remark AS remark,
+				A.is_built_in as isBuiltIn,
+				B.app_name AS appName,
+				B.app_code AS appCode,
+				B.app_webpath AS appWebpath,
+				B.remark AS remark,
+				B.use_state AS useState
+			FROM
+				sys_permission AS A
+			LEFT JOIN sys_application AS B ON A.fk_application = B.id
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+			limit ${start},${limit}
+	</select>
+  <select id="getListDataCount" parameterType="java.util.Map" resultType="long">
+  	SELECT COUNT(1) 
+			FROM
+				sys_permission AS A
+			LEFT JOIN sys_application AS B ON A.fk_application = B.id
+		<where>
+			<include refid="whereSql"></include>
+		</where>  	
+  </select>	
+	
+	
+	
+	
+	<insert id="savePermission" parameterType="java.util.Map">
+		INSERT INTO sys_permission
+		(
+		id,
+		fk_pid,
+		permission_name,
+		is_folder,
+		fk_application,
+		permission_type,
+		permission_path,
+		remark
+		)
+		VALUES
+		(
+		uuid(),#{fkPid},#{permissionName},#{isFolder},#{fkApplication},#{permissionType},#{permissionPath},#{remark})
+	</insert>
+	<update id="updatePermission" parameterType="java.util.Map">
+		UPDATE sys_permission
+		set
+		fk_pid=#{fkPid},permission_name=#{permissionName},fk_application=#{fkApplication},permission_type=#{permissionType}
+		,permission_path=#{permissionPath},remark=#{remark}
+		where id=#{id}
+	</update>
+	<update id="updatePermissionFolder" parameterType="java.util.Map">
+		UPDATE sys_permission
+		set
+		fk_pid=#{fkPid},permission_name=#{permissionName}
+		where id=#{id}
+	</update>
+  <delete id="delById" parameterType="string">
+  	delete FROM sys_permission where id=#{id}
+  </delete>		
+</mapper>

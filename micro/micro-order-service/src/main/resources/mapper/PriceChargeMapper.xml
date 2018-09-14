@@ -1,0 +1,170 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- t_price_charge : 计费结果表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.order.mapper.PriceChargeMapper">
+
+    <resultMap id="priceChargeResult" type="PriceCharge">
+        <result column="id" property="id" jdbcType="OTHER" />
+        <result column="fk_cust_id" property="fkCustId" jdbcType="OTHER" />
+        <result column="fk_order_id" property="fkOrderId" jdbcType="OTHER" />
+        <result column="billing_type" property="billingType" jdbcType="OTHER" />
+        <result column="settlement_amount" property="settlementAmount" jdbcType="OTHER" />
+        <result column="price_status" property="priceStatus" jdbcType="OTHER" />
+        <result column="calc_date" property="calcDate" jdbcType="OTHER" />
+        <result column="service_type" property="serviceType" jdbcType="OTHER" />
+        <result column="creater" property="creater" jdbcType="OTHER" />
+        <result column="create_time" property="createTime" jdbcType="OTHER" />
+        <result column="updater" property="updater" jdbcType="OTHER" />
+        <result column="update_time" property="updateTime" jdbcType="OTHER" />
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	fk_cust_id ,
+        	fk_order_id ,
+        	billing_type ,
+        	settlement_amount ,
+        	price_status ,
+        	calc_date ,
+        	service_type ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="PriceCharge" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO
+        t_price_charge (
+        	id ,
+        	fk_cust_id ,
+        	fk_order_id ,
+        	billing_type ,
+        	settlement_amount ,
+        	price_status ,
+        	calc_date ,
+        	service_type ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{fkCustId,jdbcType=BIGINT} ,
+        		#{fkOrderId,jdbcType=BIGINT} ,
+        		#{billingType,jdbcType=VARCHAR} ,
+       			#{settlementAmount,jdbcType=DOUBLE} ,
+        		#{priceStatus,jdbcType=VARCHAR} ,
+        		#{calcDate,jdbcType=TIMESTAMP} ,
+        		#{serviceType,jdbcType=VARCHAR} ,
+        		#{creater,jdbcType=VARCHAR} ,
+        		#{createTime,jdbcType=TIMESTAMP} ,
+        		#{updater,jdbcType=VARCHAR} ,
+        		#{updateTime,jdbcType=TIMESTAMP} 
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="priceCharge">
+    <![CDATA[
+        UPDATE t_price_charge SET
+        			fk_cust_id = #{fkCustId,jdbcType=BIGINT} ,
+        			fk_order_id = #{fkOrderId,jdbcType=BIGINT} ,
+        			billing_type = #{billingType,jdbcType=VARCHAR} ,
+        			settlement_amount = #{settlementAmount,jdbcType=DOUBLE} ,
+        			price_status = #{priceStatus,jdbcType=VARCHAR} ,
+        			calc_date = #{calcDate,jdbcType=TIMESTAMP} ,
+        			service_type = #{serviceType,jdbcType=VARCHAR} ,
+        			creater = #{creater,jdbcType=VARCHAR} ,
+        			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+        			updater = #{updater,jdbcType=VARCHAR} ,
+        			update_time = #{updateTime,jdbcType=TIMESTAMP} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from t_price_charge where
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="queryById" resultMap="priceChargeResult" parameterType="java.lang.Long">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_price_charge 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			<if test="id!=null">
+				AND id = #{id}
+			</if>
+			<if test="fkCustId!=null">
+				AND fk_cust_id = #{fkCustId}
+			</if>
+			<if test="fkOrderId!=null">
+				AND fk_order_id = #{fkOrderId}
+			</if>
+			<if test="billingType!=null">
+				AND billing_type = #{billingType}
+			</if>
+			<if test="settlementAmount!=null">
+				AND settlement_amount = #{settlementAmount}
+			</if>
+			<if test="priceStatus!=null">
+				AND price_status = #{priceStatus}
+			</if>
+			<if test="calcDate!=null">
+				AND calc_date = #{calcDate}
+			</if>
+			<if test="serviceType!=null">
+				AND service_type = #{serviceType}
+			</if>
+			<if test="creater!=null">
+				AND creater = #{creater}
+			</if>
+			<if test="createTime!=null">
+				AND create_time = #{createTime}
+			</if>
+			<if test="updater!=null">
+				AND updater = #{updater}
+			</if>
+			<if test="updateTime!=null">
+				AND update_time = #{updateTime}
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="PriceCharge" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from t_price_charge
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>  
+    
+    <select id="queryList" resultMap="priceChargeResult" parameterType="PriceCharge">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_price_charge 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+	
+</mapper>

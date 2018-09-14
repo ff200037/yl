@@ -1,0 +1,184 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- t_coupon_history : 优惠券发布历史表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.coupon.mapper.CouponHistoryMapper">
+
+    <resultMap id="couponHistoryResult" type="CouponHistory">
+        <result column="id" property="id" jdbcType="OTHER" />
+        <result column="cpn_id" property="cpnId" jdbcType="OTHER" />
+        <result column="cpn_name" property="cpnName" jdbcType="OTHER" />
+        <result column="cpn_no" property="cpnNo" jdbcType="OTHER" />
+        <result column="cpn_type" property="cpnType" jdbcType="OTHER" />
+        <result column="spread_num" property="spreadNum" jdbcType="OTHER" />
+        <result column="spread_mode" property="spreadMode" jdbcType="OTHER" />
+        <result column="spread_channel" property="spreadChannel" jdbcType="OTHER" />
+        <result column="spread_time" property="spreadTime" jdbcType="OTHER" />
+    	<result column="spread_people" property="spreadPeople" jdbcType="OTHER"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	cpn_id ,
+        	cpn_name ,
+        	cpn_no ,
+        	cpn_type ,
+        	spread_num ,
+        	spread_mode ,
+        	spread_channel ,
+        	spread_time ,
+        	spread_people
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="CouponHistory" useGeneratedKeys="true" keyProperty="id">
+    	<!-- oracle -->
+    	<!-- 
+		<selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="id">  
+	        SELECT S_t_coupon_history.nextval AS ID FROM DUAL  
+	    </selectKey> 
+	     -->
+    <![CDATA[
+        INSERT INTO
+        t_coupon_history (
+        	id ,
+        	cpn_id ,
+        	cpn_name ,
+        	cpn_no ,
+        	cpn_type ,
+        	spread_num ,
+        	spread_mode ,
+        	spread_channel ,
+        	spread_time ,
+        	spread_people
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{cpnId,jdbcType=BIGINT} ,
+        		#{cpnName,jdbcType=VARCHAR} ,
+        		#{cpnNo,jdbcType=VARCHAR} ,
+        		#{cpnType,jdbcType=VARCHAR} ,
+       			#{spreadNum,jdbcType=DOUBLE} ,
+        		#{spreadMode,jdbcType=VARCHAR} ,
+        		#{spreadChannel,jdbcType=VARCHAR} ,
+        		#{spreadTime,jdbcType=TIMESTAMP} ,
+        		#{spreadPeople,jdbcType=VARCHAR} ,
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="couponHistory">
+    <![CDATA[
+        UPDATE t_coupon_history SET
+        			cpn_id = #{cpnId,jdbcType=BIGINT} ,
+        			cpn_name = #{cpnName,jdbcType=VARCHAR} ,
+        			cpn_no = #{cpnNo,jdbcType=VARCHAR} ,
+        			cpn_type = #{cpnType,jdbcType=VARCHAR} ,
+        			spread_num = #{spreadNum,jdbcType=DOUBLE} ,
+        			spread_mode = #{spreadMode,jdbcType=VARCHAR} ,
+        			spread_channel = #{spreadChannel,jdbcType=VARCHAR} ,
+        			spread_time = #{spreadTime,jdbcType=TIMESTAMP} ,
+        			spread_people = #{spreadPeople,jdbcType=VARCHAR} ,
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from t_coupon_history where
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <delete id="batchDeleteByIds" parameterType="java.lang.String">
+    	delete from t_coupon_history where ID in 
+    	<foreach item="ids" collection="array" open="(" separator="," close=")">
+    	 #{ids}   
+    	</foreach>
+    </delete>
+    
+     <select id="getMaxId" resultType="int">
+		SELECT 
+			MAX(id) as maxId 
+		FROM t_coupon_history
+	</select>
+    
+    <select id="queryById" resultMap="couponHistoryResult">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_coupon_history 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			<if test="id!=null">
+				AND id = #{id}
+			</if>
+			<if test="cpnId!=null">
+				AND cpn_id = #{cpnId}
+			</if>
+			<if test="cpnName!=null">
+				AND cpn_name = #{cpnName}
+			</if>
+			<if test="cpnNo!=null">
+				AND cpn_no = #{cpnNo}
+			</if>
+			<if test="cpnType!=null">
+				AND cpn_type = #{cpnType}
+			</if>
+			<if test="spreadNum!=null">
+				AND spread_num = #{spreadNum}
+			</if>
+			<if test="spreadMode!=null">
+				AND spread_mode = #{spreadMode}
+			</if>
+			<if test="spreadChannel!=null">
+				AND spread_channel = #{spreadChannel}
+			</if>
+			<if test="spreadTime!=null">
+				AND spread_time = #{spreadTime}
+			</if>
+			<if test="spreadPeople!=null">
+				AND spread_people = #{spreadPeople}
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="CouponHistory" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from t_coupon_history
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>
+    
+    
+    <select id="findPage" resultMap="couponHistoryResult" parameterType="CouponHistory">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_coupon_history 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+    
+    
+    <select id="queryList" resultMap="couponHistoryResult" parameterType="CouponHistory">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_coupon_history 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+
+	
+</mapper>

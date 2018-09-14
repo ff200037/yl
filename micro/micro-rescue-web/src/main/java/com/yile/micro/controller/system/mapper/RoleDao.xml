@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.RoleDao">
+	<resultMap id="BaseResultMap" type="com.yile.micro.controller.system.bean.Role">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="whereSql">
+		<if test="roleName !=null and roleName != ''">
+			and role_name=#{roleName}
+		</if>
+		<if test="keyWord !=null and keyWord != ''">
+			and (role_name like concat('%',#{keyWord},'%') or remark like concat('%',#{keyWord},'%'))
+		</if>		
+	</sql>
+	<select id="getListData" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		id,
+		role_name AS roleName,
+		remark
+		FROM
+		sys_role
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+			limit ${start},${limit}
+	</select>
+	<select id="getListDataCount" parameterType="java.util.Map"
+		resultType="long">
+		SELECT
+		COUNT(1)
+		FROM
+		sys_role
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+	</select>
+	<select id="getComboboxData" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+			id,
+			role_name AS roleName,
+			remark
+		FROM
+			sys_role
+	</select>
+	<insert id="saveRole" parameterType="java.util.Map">
+		INSERT INTO sys_role (role_name,remark) VALUES (#{roleName},#{remark})
+	</insert>
+	<select id="getRoleByName" parameterType="string" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		sys_role where role_name=#{roleName}
+	</select>
+	<select id="getRoleBy" parameterType="string" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		sys_role where id=#{id}
+	</select>
+	<update id="updateRole" parameterType="java.util.Map">
+		UPDATE sys_role set role_name=#{roleName},remark=#{remark} where id=#{id}
+	</update>
+	<delete id="delById" parameterType="string">
+		delete FROM sys_role where id=#{id}
+	</delete>
+</mapper>

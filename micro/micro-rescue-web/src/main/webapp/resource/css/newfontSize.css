@@ -1,0 +1,130 @@
+x-window-footer {
+    position: relative;
+    top: 0;
+    right: 0;
+}
+.x-tab-strip SPAN.x-tab-strip-text {
+    font-size: 12px;
+}
+.x-panel-header {
+    font-size: 12px;
+}
+.x-tree-node {
+    font-size: 12px;
+}
+.x-grid3-hd-row TD {
+    font-size: 12px;
+}
+.x-grid3-row TD {
+    font-size: 12px;
+    LINE-HEIGHT: 16px;
+}
+.x-tip .x-tip-bd {
+    font-size: 12px;
+}
+.x-tip h3{
+    font-size: 12px;
+}
+.x-tip .x-tip-bd-inner{
+    font-size:12px;
+}
+.x-panel-tl .x-panel-header {
+    FONT: normal 12px tahoma,arial,verdana,sans-serif;
+}
+.x-form-field {
+    FONT: 12px tahoma,arial,helvetica,sans-serif 
+}
+.x-small-editor .x-form-field {
+    FONT: 12px tahoma,arial,helvetica,sans-serif 
+}
+.x-combo-list-item {
+    FONT: 12px tahoma,arial,helvetica,sans-serif; 
+} 
+.x-menu-list-item {
+    FONT: 12px tahoma,arial,sans-serif;
+}
+.x-window-tl .x-window-header {
+    FONT: bold 12px tahoma,arial,verdana,sans-serif; 
+}
+.ext-ie .x-form-text {
+    margin-top:1px;
+}
+.x-form-item { 
+    FONT: 12px tahoma,arial,helvetica,sans-serif
+}
+.x-grid-group-hd DIV { 
+    FONT: bold 12px tahoma,arial,helvetica,sans-serif;
+}
+
+..x-btn-text-icon .x-btn-center .x-btn-text {ext-all.css (line 227)
+background-position:0pt 2px;
+background-repeat:no-repeat;
+padding:3px 0pt 2px 18px;
+}
+.ext-gecko .x-btn button {ext-all.css (line 222)
+padding-left:0pt;
+padding-right:0pt;
+}
+.x-btn button{
+    font-size:12px;
+}
+/*
+自定义下拉框标题,原来是粗体的
+*/
+.x-combo-list-hd {
+    color: #15428B;
+    font:12px tahoma,arial,helvetica,sans-serif;
+}
+
+/*
+*实际运行中，Ext.PagingToolbar中字体，Ext.LoadMask字体， Ext.ToolTip字体没有变化，
+通过FF可以查看对应的CLASS，增加以下代码，可以完美解决
+*/
+.x-toolbar div.xtb-text{
+    padding:2px 2px 0;
+    line-height:16px;
+ font-size:12px;
+    display:block;
+}
+.x-tip .x-tip-header-text {
+    font: bold 12px tahoma,arial,helvetica,sans-serif;
+    color:#444;
+}
+
+.x-tip .x-tip-body {
+    font: normal 12px tahoma,arial,helvetica,sans-serif;
+    color:#444;
+}
+.ext-el-mask-msg div {
+    background-color: #eee;
+    border-color:#a3bad9;
+    color:#222;
+    font:normal 12px tahoma, arial, helvetica, sans-serif;
+}
+/*
+*修改fieldset标题和多选控件和分页控件的字体,日期控件的确定和取消按钮
+*/
+.x-fieldset-header-text{
+font: bold 12px tahoma,arial,helvetica,sans-serif;
+}
+.x-list-body dt em {
+    font: 12px arial,tahoma,helvetica,sans-serif;
+}
+.x-toolbar td, .x-toolbar span, .x-toolbar input, .x-toolbar div, .x-toolbar select, .x-toolbar label {
+    font: 12px arial,tahoma,helvetica,sans-serif;
+}
+.x-date-mp-btns button {
+    background-color: #083772;
+    border-color: #3366CC #000055 #000055 #3366CC;
+    color: #FFFFFF;
+    font: 12px arial,helvetica,tahoma,sans-serif;
+}
+.x-grid3-row td, .x-grid3-summary-row td {
+    font: 12px/13px arial,tahoma,helvetica,sans-serif;
+}
+/*
+*解决下拉框项的高度不完全显示的问题
+*/
+.x-combo-list-item {
+    height: 13px;
+}

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.MenuDao">
+	<resultMap id="BaseResultMap" type="com.yile.micro.controller.system.bean.Menu">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="fk_pid" property="fkPid" jdbcType="VARCHAR" />
+		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+		<result column="menu_index" property="menuIndex" jdbcType="INTEGER" />
+		<result column="is_folder" property="isFolder" jdbcType="VARCHAR" />
+		<result column="fk_permission" property="fkPermission"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="MenuVo" type="com.yile.micro.controller.system.bean.MenuVo">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<id column="fkPid" property="fkPid" jdbcType="VARCHAR" />
+		<result column="menuName" property="menuName" jdbcType="VARCHAR" />
+		<result column="isFolder" property="isFolder" jdbcType="VARCHAR" />
+		<result column="permissionName" property="permissionName"
+			jdbcType="VARCHAR" />
+		<result column="permissionType" property="permissionType"
+			jdbcType="VARCHAR" />
+		<result column="permissionPath" property="permissionPath"
+			jdbcType="VARCHAR" />
+		<result column="appName" property="appName" jdbcType="VARCHAR" />
+		<result column="appWebpath" property="appWebpath" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getDataForTree" resultMap="MenuVo">
+		SELECT
+		A.id AS id,
+		A.fk_pid as fkPid,
+		A.menu_name AS menuName,
+		A.is_folder AS isFolder,
+		B.permission_name AS permissionName,
+		B.permission_type AS
+		permissionType,
+		B.permission_path AS permissionPath,
+		C.app_name AS
+		appName,
+		C.app_webpath AS appWebpath
+		,C.app_code as appCode
+		FROM
+		sys_menu AS A
+		left JOIN sys_permission
+		AS B ON A.fk_permission = B.id
+		left JOIN sys_application AS C ON
+		B.fk_application = C.id
+	</select>
+	<update id="updateMenu" parameterType="java.util.Map">
+		UPDATE sys_menu
+		SET
+		menu_name=#{menuName},fk_pid=#{fkPid},fk_permission=#{fkPermission}
+		where id = #{id}
+	</update>
+	<update id="updateMenuFolder" parameterType="java.util.Map">
+		UPDATE sys_menu
+		SET
+		menu_name=#{menuName},fk_pid=#{fkPid}
+		where id = #{id}
+	</update>
+	<select id="getAllData" resultMap="BaseResultMap">
+		SELECT * FROM sys_menu
+	</select>
+	<insert id="saveMenu" parameterType="java.util.Map">
+		INSERT INTO sys_menu (
+		id,
+		fk_pid,
+		menu_name,
+		menu_index,
+		is_folder,
+		fk_permission
+		)
+		VALUES
+		(
+		UUID(),#{fkPid},#{menuName},#{menuIndex},#{isFolder},#{fkPermission})
+	</insert>
+
+	<sql id="whereSql">
+		<if test="id !=null and id != ''">
+			(A.fk_pid=#{id} or A.id=#{id})
+		</if>
+	</sql>
+
+	<select id="getListData" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		A.id AS id,
+		A.fk_pid as fkPid,
+		(SELECT menu_name FROM sys_menu WHERE id=A.fk_pid) as parentMenuName,
+		A.menu_name AS menuName,
+		A.menu_index AS menuIndex,
+		A.is_folder AS isFolder,
+		A.is_built_in as isBuiltIn,
+		B.id as fkPermission,
+		B.permission_name AS
+		permissionName,
+		B.permission_type AS permissionType,
+		B.permission_path
+		AS permissionPath,
+		B.remark AS remark,
+		C.app_name AS appName,
+		C.app_webpath AS appWebpath
+		FROM
+		sys_menu AS A
+		left JOIN sys_permission AS B ON
+		A.fk_permission = B.id
+		left JOIN sys_application AS C ON B.fk_application =C.id
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+			limit ${start},${limit}
+	</select>
+	<select id="getListDataCount" parameterType="java.util.Map"
+		resultType="long">
+		SELECT
+		COUNT(1)
+		FROM
+		sys_menu AS A
+		left JOIN sys_permission AS B ON
+		A.fk_permission = B.id
+		left JOIN sys_application AS C ON B.fk_application =
+		C.id
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+	</select>
+	<select id="findAccountMenuIdList" parameterType="string"
+		resultType="string">
+		SELECT DISTINCT(fk_menu) fk_menu FROM sys_role_menu WHERE
+		fk_role in(SELECT fk_role FROM sys_account_role WHERE fk_account=#{id})
+	</select>
+	<select id="findAllMenuIdList" resultType="string">
+		SELECT id from sys_menu
+	</select>
+	<select id="getById" parameterType="string" resultType="java.util.Map">
+		SELECT
+			A.is_built_in as isBuiltIn,
+			A.id AS id,
+			A.fk_pid AS fkPid,
+			(SELECT menu_name FROM sys_menu WHERE id=A.fk_pid) AS fkPidName,
+			A.menu_name AS menuName,
+			B.id AS fkPermission,
+			B.permission_name AS permissionName,
+			B.permission_path AS permissionPath
+		FROM
+			sys_menu AS A
+			LEFT JOIN sys_permission AS B ON A.fk_permission = B.id
+		WHERE A.id=#{id}
+	</select>
+  <delete id="delById" parameterType="string">
+  	delete FROM sys_menu where id=#{id}
+  </delete>	
+
+
+</mapper>

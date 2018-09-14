@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="micro-common" />
+        <module name="micro-coupon-service" />
+        <module name="micro-order-service" />
+        <module name="micro-rescue-web" />
+        <module name="micro-reverse" />
+        <module name="micro-system" />
+        <module name="micro-user" />
+        <module name="micro-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="micro" target="1.8" />
+      <module name="micro-common" target="1.8" />
+      <module name="micro-coupon" target="1.8" />
+      <module name="micro-coupon-service" target="1.8" />
+      <module name="micro-order-service" target="1.8" />
+      <module name="micro-rescue-web" target="1.8" />
+      <module name="micro-reverse" target="1.8" />
+      <module name="micro-system" target="1.8" />
+      <module name="micro-user" target="1.8" />
+      <module name="micro-web" target="1.8" />
+      <module name="reverse-engineering" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

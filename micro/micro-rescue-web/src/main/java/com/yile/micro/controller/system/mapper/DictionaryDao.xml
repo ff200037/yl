@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.DictionaryDao">
+	<resultMap id="BaseResultMap" type="com.yile.micro.controller.system.bean.Dictionary">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="dictionary_name" property="dictionaryName"
+			jdbcType="VARCHAR" />
+		<result column="dictionary_code" property="dictionaryCode"
+			jdbcType="VARCHAR" />
+		<result column="fk_pid" property="fkPid" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getCountByCode" parameterType="string" resultType="java.lang.Long">
+		SELECT COUNT(1) FROM sys_dictionary WHERE dictionary_code =#{dictionaryCode}
+	</select>
+	<select id="getAllDictionary" resultMap="BaseResultMap">
+		SELECT * FROM sys_dictionary
+	</select>
+	<insert id="saveDictionary" parameterType="java.util.Map">
+	INSERT INTO sys_dictionary (id,dictionary_name,dictionary_code,fk_pid) VALUES (uuid(),#{dictionaryName},#{dictionaryCode},#{fkPid})	
+	</insert>
+	<update id="updateDictionary" parameterType="java.util.Map">
+		UPDATE sys_dictionary set
+		dictionary_name=#{dictionaryName},dictionary_code=#{dictionaryCode},fk_pid=#{fkPid}
+		where id=#{id}
+	</update>
+  <delete id="delById" parameterType="string">
+  	delete FROM sys_dictionary where id=#{id}
+  </delete>		
+	
+	
+</mapper>

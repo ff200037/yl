@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yile.micro.controller.system.mapper.ApplicationDao">
+	<resultMap id="BaseResultMap" type="com.yile.micro.controller.system.bean.Application">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="app_name" property="appName" jdbcType="VARCHAR" />
+		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
+		<result column="app_webpath" property="appWebpath" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="use_state" property="useState" jdbcType="INTEGER" />
+	</resultMap>
+  	<sql id="whereSql">
+			<if test="useState !=null and useState != ''">
+				and use_state=#{useState}
+			</if>    	
+  	</sql>  	
+	<select id="getListData" resultType="java.util.Map">
+		SELECT * FROM sys_application
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+			limit ${start},${limit}
+	</select>
+	<select id="getListDataCount" parameterType="java.util.Map"
+		resultType="long">
+		SELECT
+		COUNT(1)
+		FROM
+		sys_role
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+	</select>	
+	
+	
+	
+	<delete id="delById" parameterType="string">
+		delete FROM sys_application where
+		id=#{id}
+	</delete>
+	<insert id="saveApplication" parameterType="java.util.Map">
+		INSERT INTO
+		sys_application
+		(app_name,app_code,app_webpath,use_state,remark) VALUES
+		(#{appName},#{appCode},#{appWebpath},#{useState},#{remark})
+	</insert>
+	<update id="updateApplication" parameterType="java.util.Map">
+		UPDATE sys_application set
+		app_name=#{appName},app_code=#{appCode},app_webpath=#{appWebpath},use_state=#{useState},remark=#{remark} where id=#{id}
+	</update>
+	<select id="getAppListData" resultType="java.util.Map">
+		SELECT * FROM sys_application WHERE  use_state=2 
+	</select>
+  	<select id="getCountByCode" parameterType="string" resultType="java.lang.Long">
+		SELECT COUNT(1) FROM sys_application WHERE app_code =#{val}
+	</select>	
+  	<select id="getById" parameterType="int" resultMap="BaseResultMap">
+		SELECT * FROM sys_application WHERE id =#{val}
+	</select>	
+</mapper>

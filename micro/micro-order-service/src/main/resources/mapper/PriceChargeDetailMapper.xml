@@ -1,0 +1,162 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- t_price_charge_detail : 计费结果明细表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.order.mapper.PriceChargeDetailMapper">
+
+    <resultMap id="priceChargeDetailResult" type="PriceChargeDetail">
+        <result column="id" property="id" jdbcType="OTHER" />
+        <result column="fk_prc_id" property="fkPrcId" jdbcType="OTHER" />
+        <result column="item_type" property="itemType" jdbcType="OTHER" />
+        <result column="pricing_amt" property="pricingAmt" jdbcType="OTHER" />
+        <result column="amount" property="amount" jdbcType="OTHER" />
+        <result column="price" property="price" jdbcType="OTHER" />
+        <result column="item_desc" property="itemDesc" jdbcType="OTHER" />
+        <result column="data_open_time" property="dataOpenTime" jdbcType="OTHER" />
+        <result column="data_open_type" property="dataOpenType" jdbcType="OTHER" />
+        <result column="item_code" property="itemCode" jdbcType="OTHER" />
+        <result column="rescue_project" property="rescueProject" jdbcType="OTHER" />
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	fk_prc_id ,
+        	item_type ,
+        	pricing_amt ,
+        	amount ,
+        	price ,
+        	item_desc ,
+        	data_open_time ,
+        	data_open_type ,
+        	item_code ,
+        	rescue_project 
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="PriceChargeDetail" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO
+        t_price_charge_detail (
+        	id ,
+        	fk_prc_id ,
+        	item_type ,
+        	pricing_amt ,
+        	amount ,
+        	price ,
+        	item_desc ,
+        	data_open_time ,
+        	data_open_type ,
+        	item_code ,
+        	rescue_project 
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{fkPrcId,jdbcType=BIGINT} ,
+        		#{itemType,jdbcType=VARCHAR} ,
+       			#{pricingAmt,jdbcType=DOUBLE} ,
+        		#{amount,jdbcType=VARCHAR} ,
+       			#{price,jdbcType=DOUBLE} ,
+        		#{itemDesc,jdbcType=VARCHAR} ,
+        		#{dataOpenTime,jdbcType=TIMESTAMP} ,
+        		#{dataOpenType,jdbcType=VARCHAR} ,
+        		#{itemCode,jdbcType=VARCHAR} ,
+        		#{rescueProject,jdbcType=VARCHAR} 
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="priceChargeDetail">
+    <![CDATA[
+        UPDATE t_price_charge_detail SET
+        			fk_prc_id = #{fkPrcId,jdbcType=BIGINT} ,
+        			item_type = #{itemType,jdbcType=VARCHAR} ,
+        			pricing_amt = #{pricingAmt,jdbcType=DOUBLE} ,
+        			amount = #{amount,jdbcType=VARCHAR} ,
+        			price = #{price,jdbcType=DOUBLE} ,
+        			item_desc = #{itemDesc,jdbcType=VARCHAR} ,
+        			data_open_time = #{dataOpenTime,jdbcType=TIMESTAMP} ,
+        			data_open_type = #{dataOpenType,jdbcType=VARCHAR} ,
+        			item_code = #{itemCode,jdbcType=VARCHAR} ,
+        			rescue_project = #{rescueProject,jdbcType=VARCHAR} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from t_price_charge_detail where
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="queryById" resultMap="priceChargeDetailResult" parameterType="java.lang.Long">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_price_charge_detail 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			<if test="id!=null">
+				AND id = #{id}
+			</if>
+			<if test="fkPrcId!=null">
+				AND fk_prc_id = #{fkPrcId}
+			</if>
+			<if test="itemType!=null">
+				AND item_type = #{itemType}
+			</if>
+			<if test="pricingAmt!=null">
+				AND pricing_amt = #{pricingAmt}
+			</if>
+			<if test="amount!=null">
+				AND amount = #{amount}
+			</if>
+			<if test="price!=null">
+				AND price = #{price}
+			</if>
+			<if test="itemDesc!=null">
+				AND item_desc = #{itemDesc}
+			</if>
+			<if test="dataOpenTime!=null">
+				AND data_open_time = #{dataOpenTime}
+			</if>
+			<if test="dataOpenType!=null">
+				AND data_open_type = #{dataOpenType}
+			</if>
+			<if test="itemCode!=null">
+				AND item_code = #{itemCode}
+			</if>
+			<if test="rescueProject!=null">
+				AND rescue_project = #{rescueProject}
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="PriceChargeDetail" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from t_price_charge_detail
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>  
+    
+    <select id="queryList" resultMap="priceChargeDetailResult" parameterType="PriceChargeDetail">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_price_charge_detail 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+	
+</mapper>

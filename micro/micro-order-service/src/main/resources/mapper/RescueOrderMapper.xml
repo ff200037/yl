@@ -1,0 +1,202 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- t_rescue_order : 救援订单表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.order.mapper.RescueOrderMapper">
+
+    <resultMap id="rescueOrderResult" type="RescueOrder">
+        <result column="id" property="id" jdbcType="OTHER" />
+        <result column="fk_order_id" property="fkOrderId" jdbcType="OTHER" />
+        <result column="belonged_region" property="belongedRegion" jdbcType="OTHER" />
+        <result column="fk_car_id" property="fkCarId" jdbcType="OTHER" />
+        <result column="fk_rescue_mechanism_id" property="fkRescueMechanismId" jdbcType="OTHER" />
+        <result column="rescue_explain" property="rescueExplain" jdbcType="OTHER" />
+        <result column="car_position" property="carPosition" jdbcType="OTHER" />
+        <result column="car_lon" property="carLon" jdbcType="OTHER" />
+        <result column="car_lat" property="carLat" jdbcType="OTHER" />
+        <result column="wait_time" property="waitTime" jdbcType="OTHER" />
+        <result column="rescue_mileage" property="rescueMileage" jdbcType="OTHER" />
+        <result column="repair_charging" property="repairCharging" jdbcType="OTHER" />
+        <result column="creater" property="creater" jdbcType="OTHER" />
+        <result column="create_time" property="createTime" jdbcType="OTHER" />
+        <result column="updater" property="updater" jdbcType="OTHER" />
+        <result column="update_time" property="updateTime" jdbcType="OTHER" />
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	fk_order_id ,
+        	belonged_region ,
+        	fk_car_id ,
+        	fk_rescue_mechanism_id ,
+        	rescue_explain ,
+        	car_position ,
+        	car_lon ,
+        	car_lat ,
+        	wait_time ,
+        	rescue_mileage ,
+        	repair_charging ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="RescueOrder" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO
+        t_rescue_order (
+        	id ,
+        	fk_order_id ,
+        	belonged_region ,
+        	fk_car_id ,
+        	fk_rescue_mechanism_id ,
+        	rescue_explain ,
+        	car_position ,
+        	car_lon ,
+        	car_lat ,
+        	wait_time ,
+        	rescue_mileage ,
+        	repair_charging ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{fkOrderId,jdbcType=BIGINT} ,
+        		#{belongedRegion,jdbcType=VARCHAR} ,
+        		#{fkCarId,jdbcType=BIGINT} ,
+        		#{fkRescueMechanismId,jdbcType=BIGINT} ,
+        		#{rescueExplain,jdbcType=VARCHAR} ,
+        		#{carPosition,jdbcType=VARCHAR} ,
+        		#{carLon,jdbcType=VARCHAR} ,
+        		#{carLat,jdbcType=VARCHAR} ,
+        		#{waitTime,jdbcType=INTEGER} ,
+       			#{rescueMileage,jdbcType=DOUBLE} ,
+       			#{repairCharging,jdbcType=DOUBLE} ,
+        		#{creater,jdbcType=VARCHAR} ,
+        		#{createTime,jdbcType=TIMESTAMP} ,
+        		#{updater,jdbcType=VARCHAR} ,
+        		#{updateTime,jdbcType=TIMESTAMP} 
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="rescueOrder">
+    <![CDATA[
+        UPDATE t_rescue_order SET
+        			fk_order_id = #{fkOrderId,jdbcType=BIGINT} ,
+        			belonged_region = #{belongedRegion,jdbcType=VARCHAR} ,
+        			fk_car_id = #{fkCarId,jdbcType=BIGINT} ,
+        			fk_rescue_mechanism_id = #{fkRescueMechanismId,jdbcType=BIGINT} ,
+        			rescue_explain = #{rescueExplain,jdbcType=VARCHAR} ,
+        			car_position = #{carPosition,jdbcType=VARCHAR} ,
+        			car_lon = #{carLon,jdbcType=VARCHAR} ,
+        			car_lat = #{carLat,jdbcType=VARCHAR} ,
+        			wait_time = #{waitTime,jdbcType=INTEGER} ,
+        			rescue_mileage = #{rescueMileage,jdbcType=DOUBLE} ,
+        			repair_charging = #{repairCharging,jdbcType=DOUBLE} ,
+        			creater = #{creater,jdbcType=VARCHAR} ,
+        			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+        			updater = #{updater,jdbcType=VARCHAR} ,
+        			update_time = #{updateTime,jdbcType=TIMESTAMP} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from t_rescue_order where
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="queryById" resultMap="rescueOrderResult" parameterType="java.lang.Long">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_rescue_order 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			<if test="id!=null">
+				AND id = #{id}
+			</if>
+			<if test="fkOrderId!=null">
+				AND fk_order_id = #{fkOrderId}
+			</if>
+			<if test="belongedRegion!=null">
+				AND belonged_region = #{belongedRegion}
+			</if>
+			<if test="fkCarId!=null">
+				AND fk_car_id = #{fkCarId}
+			</if>
+			<if test="fkRescueMechanismId!=null">
+				AND fk_rescue_mechanism_id = #{fkRescueMechanismId}
+			</if>
+			<if test="rescueExplain!=null">
+				AND rescue_explain = #{rescueExplain}
+			</if>
+			<if test="carPosition!=null">
+				AND car_position = #{carPosition}
+			</if>
+			<if test="carLon!=null">
+				AND car_lon = #{carLon}
+			</if>
+			<if test="carLat!=null">
+				AND car_lat = #{carLat}
+			</if>
+			<if test="waitTime!=null">
+				AND wait_time = #{waitTime}
+			</if>
+			<if test="rescueMileage!=null">
+				AND rescue_mileage = #{rescueMileage}
+			</if>
+			<if test="repairCharging!=null">
+				AND repair_charging = #{repairCharging}
+			</if>
+			<if test="creater!=null">
+				AND creater = #{creater}
+			</if>
+			<if test="createTime!=null">
+				AND create_time = #{createTime}
+			</if>
+			<if test="updater!=null">
+				AND updater = #{updater}
+			</if>
+			<if test="updateTime!=null">
+				AND update_time = #{updateTime}
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="RescueOrder" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from t_rescue_order
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>  
+    
+    <select id="queryList" resultMap="rescueOrderResult" parameterType="RescueOrder">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_rescue_order 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+	
+</mapper>

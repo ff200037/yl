@@ -1,0 +1,186 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- t_order : 订单主表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.order.mapper.OrderMapper">
+
+    <resultMap id="orderResult" type="Order">
+        <result column="id" property="id" jdbcType="OTHER" />
+        <result column="order_no" property="orderNo" jdbcType="OTHER" />
+        <result column="order_status" property="orderStatus" jdbcType="OTHER" />
+        <result column="fk_customer_id" property="fkCustomerId" jdbcType="OTHER" />
+        <result column="order_type" property="orderType" jdbcType="OTHER" />
+        <result column="create_order_time" property="createOrderTime" jdbcType="OTHER" />
+        <result column="end_time" property="endTime" jdbcType="OTHER" />
+        <result column="service_type" property="serviceType" jdbcType="OTHER" />
+        <result column="creater" property="creater" jdbcType="OTHER" />
+        <result column="create_time" property="createTime" jdbcType="OTHER" />
+        <result column="updater" property="updater" jdbcType="OTHER" />
+        <result column="update_time" property="updateTime" jdbcType="OTHER" />
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	order_no ,
+        	order_status ,
+        	fk_customer_id ,
+        	order_type ,
+        	create_order_time ,
+        	end_time ,
+        	service_type ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO
+        t_order (
+        	id ,
+        	order_no ,
+        	order_status ,
+        	fk_customer_id ,
+        	order_type ,
+        	create_order_time ,
+        	end_time ,
+        	service_type ,
+        	creater ,
+        	create_time ,
+        	updater ,
+        	update_time 
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{orderNo,jdbcType=VARCHAR} ,
+        		#{orderStatus,jdbcType=VARCHAR} ,
+        		#{fkCustomerId,jdbcType=BIGINT} ,
+        		#{orderType,jdbcType=INTEGER} ,
+        		#{createOrderTime,jdbcType=TIMESTAMP} ,
+        		#{endTime,jdbcType=INTEGER} ,
+        		#{serviceType,jdbcType=VARCHAR} ,
+        		#{creater,jdbcType=VARCHAR} ,
+        		#{createTime,jdbcType=TIMESTAMP} ,
+        		#{updater,jdbcType=VARCHAR} ,
+        		#{updateTime,jdbcType=TIMESTAMP} 
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="order">
+    <![CDATA[
+        UPDATE t_order SET
+        			order_no = #{orderNo,jdbcType=VARCHAR} ,
+        			order_status = #{orderStatus,jdbcType=VARCHAR} ,
+        			fk_customer_id = #{fkCustomerId,jdbcType=BIGINT} ,
+        			order_type = #{orderType,jdbcType=INTEGER} ,
+        			create_order_time = #{createOrderTime,jdbcType=TIMESTAMP} ,
+        			end_time = #{endTime,jdbcType=INTEGER} ,
+        			service_type = #{serviceType,jdbcType=VARCHAR} ,
+        			creater = #{creater,jdbcType=VARCHAR} ,
+        			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+        			updater = #{updater,jdbcType=VARCHAR} ,
+        			update_time = #{updateTime,jdbcType=TIMESTAMP} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from t_order where
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="queryById" resultMap="orderResult" parameterType="java.lang.Long">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_order 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			<if test="id!=null">
+				AND id = #{id}
+			</if>
+			<if test="orderNo!=null">
+				AND order_no = #{orderNo}
+			</if>
+			<if test="orderStatus!=null">
+				AND order_status = #{orderStatus}
+			</if>
+			<if test="fkCustomerId!=null">
+				AND fk_customer_id = #{fkCustomerId}
+			</if>
+			<if test="orderType!=null">
+				AND order_type = #{orderType}
+			</if>
+			<if test="createOrderTime!=null">
+				AND create_order_time = #{createOrderTime}
+			</if>
+			<if test="endTime!=null">
+				AND end_time = #{endTime}
+			</if>
+			<if test="serviceType!=null">
+				AND service_type = #{serviceType}
+			</if>
+			<if test="creater!=null">
+				AND creater = #{creater}
+			</if>
+			<if test="createTime!=null">
+				AND create_time = #{createTime}
+			</if>
+			<if test="updater!=null">
+				AND updater = #{updater}
+			</if>
+			<if test="updateTime!=null">
+				AND update_time = #{updateTime}
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="Order" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from t_order
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>  
+    
+    <select id="queryList" resultMap="orderResult" parameterType="Order">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_order 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+    
+    <select id="findPage" resultMap="orderResult" parameterType="Order">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_order 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+    
+   	<select id="findList" resultMap="orderResult" parameterType="Order">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from t_order 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+	
+</mapper>

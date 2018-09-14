@@ -1,0 +1,252 @@
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- rescue_customer : 车主表 mybatis 配置  -->
+<mapper namespace="com.yile.micro.user.mapper.RescueCustomerMapper">
+
+    <resultMap id="rescueCustomerResult" type="RescueCustomer">
+        <result column="id" property="id" jdbcType="OTHER" />
+        <result column="customer_no" property="customerNo" jdbcType="OTHER" />
+        <result column="p_customer_no" property="pcustomerNo" jdbcType="OTHER" />
+        <result column="acc_nickname" property="accNickname" jdbcType="OTHER" />
+        <result column="customert_addr" property="customertAddr" jdbcType="OTHER" />
+        <result column="customer_sort_code" property="customerSortCode" jdbcType="OTHER" />
+        <result column="customer_type" property="customerType" jdbcType="OTHER" />
+        <result column="customer_password" property="customerPassword" jdbcType="OTHER" />
+        <result column="id_card_vld" property="idCardVld" jdbcType="OTHER" />
+        <result column="drice_no" property="driceNo" jdbcType="OTHER" />
+        <result column="license_date" property="licenseDate" jdbcType="OTHER" />
+        <result column="valid_license_date" property="validLicenseDate" jdbcType="OTHER" />
+        <result column="drive_mode" property="driveMode" jdbcType="OTHER" />
+        <result column="contact" property="contact" jdbcType="OTHER" />
+        <result column="contact_number" property="contactNumber" jdbcType="OTHER" />
+        <result column="openid" property="openid" jdbcType="OTHER" />
+        <result column="customer_source" property="customerSource" jdbcType="OTHER" />
+        <result column="fk_t_customer_id" property="fkTcustomerId" jdbcType="OTHER" />     
+      
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="commonSelectColumnsPrefix">
+	    <![CDATA[
+	    select
+        	id ,
+        	customer_no ,
+        	p_customer_no ,
+        	acc_nickname ,
+        	customert_addr ,
+        	customer_sort_code ,
+        	customer_type ,
+        	customer_password ,
+        	id_card_vld ,
+        	drice_no ,
+        	license_date ,
+        	valid_license_date ,
+        	drive_mode ,
+        	contact ,
+        	contact_number ,
+        	openid ,
+        	customer_source ,
+        	fk_t_customer_id 
+	    ]]>
+	</sql>
+
+    <insert id="insert" parameterType="RescueCustomer" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO
+        rescue_customer (
+        	id ,
+        	customer_no ,
+        	p_customer_no ,
+        	acc_nickname ,
+        	customert_addr ,
+        	customer_sort_code ,
+        	customer_type ,
+        	customer_password ,
+        	id_card_vld ,
+        	drice_no ,
+        	license_date ,
+        	valid_license_date ,
+        	drive_mode ,
+        	contact ,
+        	contact_number ,
+        	openid ,
+        	customer_source ,
+        	fk_t_customer_id 
+        ) VALUES (
+        		#{id,jdbcType=BIGINT} ,
+        		#{customerNo,jdbcType=VARCHAR} ,
+        		#{pcustomerNo,jdbcType=VARCHAR} ,
+        		#{accNickname,jdbcType=VARCHAR} ,
+        		#{customertAddr,jdbcType=VARCHAR} ,
+        		#{customerSortCode,jdbcType=VARCHAR} ,
+        		#{customerType,jdbcType=VARCHAR} ,
+        		#{customerPassword,jdbcType=VARCHAR} ,
+        		#{idCardVld,jdbcType=TIMESTAMP} ,
+        		#{driceNo,jdbcType=VARCHAR} ,
+        		#{licenseDate,jdbcType=TIMESTAMP} ,
+        		#{validLicenseDate,jdbcType=TIMESTAMP} ,
+        		#{driveMode,jdbcType=VARCHAR} ,
+        		#{contact,jdbcType=VARCHAR} ,
+        		#{contactNumber,jdbcType=VARCHAR} ,
+        		#{openid,jdbcType=VARCHAR} ,
+        		#{customerSource,jdbcType=VARCHAR} ,
+        		#{fkTcustomerId,jdbcType=BIGINT} 
+        )
+    ]]>
+
+    </insert>
+
+    <update id="update" parameterType="rescueCustomer">
+    <![CDATA[
+        UPDATE rescue_customer SET
+        			customer_no = #{customerNo,jdbcType=VARCHAR} ,
+        			p_customer_no = #{pcustomerNo,jdbcType=VARCHAR} ,
+        			acc_nickname = #{accNickname,jdbcType=VARCHAR} ,
+        			customert_addr = #{customertAddr,jdbcType=VARCHAR} ,
+        			customer_sort_code = #{customerSortCode,jdbcType=VARCHAR} ,
+        			customer_type = #{customerType,jdbcType=VARCHAR} ,
+        			customer_password = #{customerPassword,jdbcType=VARCHAR} ,
+        			id_card_vld = #{idCardVld,jdbcType=TIMESTAMP} ,
+        			drice_no = #{driceNo,jdbcType=VARCHAR} ,
+        			license_date = #{licenseDate,jdbcType=TIMESTAMP} ,
+        			valid_license_date = #{validLicenseDate,jdbcType=TIMESTAMP} ,
+        			drive_mode = #{driveMode,jdbcType=VARCHAR} ,
+        			contact = #{contact,jdbcType=VARCHAR} ,
+        			contact_number = #{contactNumber,jdbcType=VARCHAR} ,
+        			openid = #{openid,jdbcType=VARCHAR} ,
+        			customer_source = #{customerSource,jdbcType=VARCHAR} ,
+        			fk_t_customer_id = #{fkTcustomerId,jdbcType=BIGINT} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from rescue_customer where
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="queryById" resultMap="rescueCustomerResult">
+	    <include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from rescue_customer 
+	        where 
+		        id = #{id} 
+	    ]]>
+    </select>
+
+	<sql id="dynamicWhere">
+		<where>
+		     1=1
+			<if test="id!=null">
+				AND id = #{id}
+			</if>
+			<if test="customerNo!=null">
+				AND customer_no = #{customerNo}
+			</if>
+			<if test="pcustomerNo!=null">
+				AND p_customer_no = #{pcustomerNo}
+			</if>
+			<if test="accNickname!=null">
+				AND acc_nickname = #{accNickname}
+			</if>
+			<if test="customertAddr!=null">
+				AND customert_addr = #{customertAddr}
+			</if>
+			<if test="customerSortCode!=null">
+				AND customer_sort_code = #{customerSortCode}
+			</if>
+			<if test="customerType!=null">
+				AND customer_type = #{customerType}
+			</if>
+			<if test="customerPassword!=null">
+				AND customer_password = #{customerPassword}
+			</if>
+			<if test="idCardVld!=null">
+				AND id_card_vld = #{idCardVld}
+			</if>
+			<if test="driceNo!=null">
+				AND drice_no = #{driceNo}
+			</if>
+			<if test="licenseDate!=null">
+				AND license_date = #{licenseDate}
+			</if>
+			<if test="validLicenseDate!=null">
+				AND valid_license_date = #{validLicenseDate}
+			</if>
+			<if test="driveMode!=null">
+				AND drive_mode = #{driveMode}
+			</if>
+			<if test="contact!=null">
+				AND contact = #{contact}
+			</if>
+			<if test="contactNumber!=null">
+				AND contact_number = #{contactNumber}
+			</if>
+			<if test="openid!=null">
+				AND openid = #{openid}
+			</if>
+			<if test="customerSource!=null">
+				AND customer_source = #{customerSource}
+			</if>
+			<if test="fkTcustomerId!=null">
+				AND fk_t_customer_id = #{fkTcustomerId}
+			</if>
+		</where>
+	</sql>
+	 
+    <select id="queryCount" parameterType="RescueCustomer" resultType="int">
+    <![CDATA[
+        select 
+        count(*)
+        from rescue_customer
+    ]]>
+		<include refid="dynamicWhere"/>    
+    </select>  
+    
+    <select id="queryList" resultMap="rescueCustomerResult" parameterType="RescueCustomer">
+    	<include refid="commonSelectColumnsPrefix"/>
+	    <![CDATA[
+	        from rescue_customer 
+	    ]]>
+	    <include refid="dynamicWhere"/>
+    </select>
+    
+    <!-- 根据主表ID删除 -->
+    <delete id="deleteByCustomerId" parameterType="java.lang.Long">
+    <![CDATA[
+        delete from rescue_customer where
+        fk_t_customer_id = #{id} 
+    ]]>
+    </delete>
+    
+     <update id="updateByCustomerId" parameterType="rescueCustomer">
+    <![CDATA[
+        UPDATE rescue_customer SET
+        			customer_no = #{customerNo,jdbcType=VARCHAR} ,
+        			p_customer_no = #{pcustomerNo,jdbcType=VARCHAR} ,
+        			acc_nickname = #{accNickname,jdbcType=VARCHAR} ,
+        			customert_addr = #{customertAddr,jdbcType=VARCHAR} ,
+        			customer_sort_code = #{customerSortCode,jdbcType=VARCHAR} ,
+        			customer_type = #{customerType,jdbcType=VARCHAR} ,
+        			customer_password = #{customerPassword,jdbcType=VARCHAR} ,
+        			id_card_vld = #{idCardVld,jdbcType=TIMESTAMP} ,
+        			drice_no = #{driceNo,jdbcType=VARCHAR} ,
+        			license_date = #{licenseDate,jdbcType=TIMESTAMP} ,
+        			valid_license_date = #{validLicenseDate,jdbcType=TIMESTAMP} ,
+        			drive_mode = #{driveMode,jdbcType=VARCHAR} ,
+        			contact = #{contact,jdbcType=VARCHAR} ,
+        			contact_number = #{contactNumber,jdbcType=VARCHAR} ,
+        			openid = #{openid,jdbcType=VARCHAR} ,
+        			customer_source = #{customerSource,jdbcType=VARCHAR} ,
+        			fk_t_customer_id = #{fkTcustomerId,jdbcType=BIGINT} 
+        WHERE 
+	        fk_t_customer_id = #{fkTcustomerId} 
+    ]]>
+    </update>
+	
+</mapper>

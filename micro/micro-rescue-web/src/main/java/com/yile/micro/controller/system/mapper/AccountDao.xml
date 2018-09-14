@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yile.micro.controller.system.mapper.AccountDao">
+	<resultMap id="BaseResultMap" type="com.yile.micro.controller.system.bean.Account">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="account_name" jdbcType="VARCHAR" property="accountName" />
+		<result column="account_password" jdbcType="VARCHAR" property="accountPassword" />
+		<result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+		<result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+		<result column="account_type" jdbcType="INTEGER" property="accountType" />
+		<result column="account_status" jdbcType="INTEGER" property="accountStatus" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+	<select id="findByNameAndPwd" parameterType="java.util.Map" resultMap="BaseResultMap" >
+			SELECT
+				*
+			FROM
+				sys_account AS A
+			where 	A.account_name=#{accountName} and A.account_password=#{accountPassword}
+	</select>
+	<select id="findByName" parameterType="string" resultMap="BaseResultMap" >
+			SELECT
+				*
+			FROM
+				sys_account AS A
+			where 	A.account_name=#{accountName}
+	</select>
+	<sql id="whereSql">
+		<if test="accountName !=null and accountName != ''">
+			and A.account_name like concat('%',#{accountName},'%')
+		</if>		
+		<if test="accountStatus !=null and accountStatus != ''">
+			and A.account_status=#{accountStatus}
+		</if>
+	</sql>
+	<select id="getListData" parameterType="java.util.Map" resultType="java.util.Map">
+			SELECT
+				A.id AS id,
+				A.account_name AS accountName,
+			DATE_FORMAT(A.login_time, "%Y-%m-%d %H:%i") AS loginTime,
+			DATE_FORMAT(A.last_login_time, "%Y-%m-%d %H:%i") AS lastLoginTime,
+			DATE_FORMAT(A.create_date, "%Y-%m-%d %H:%i") AS createDate,
+				A.account_type AS accountType,
+				A.account_status AS accountStatus,
+				A.remark AS remark
+	,(SELECT GROUP_CONCAT(role_name) FROM sys_role WHERE id in (SELECT fk_role FROM sys_account_role WHERE fk_account=A.id)) as roleNames
+			FROM
+				sys_account as A
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+		limit ${start},${limit}
+	</select>
+	<select id="getListDataCount" parameterType="java.util.Map"
+		resultType="long">
+		SELECT
+			COUNT(1)
+		FROM
+			sys_account as A
+		<where>
+			<include refid="whereSql"></include>
+		</where>
+	</select>	
+	<insert id="saveAccount" parameterType="java.util.Map">
+		INSERT INTO sys_account
+		(id,account_name,account_password,account_type,account_status,create_date,remark)
+		VALUES
+		(uuid(),#{accountName},#{accountPassword},#{accountType},#{accountStatus},now(),#{remark})
+	</insert>
+	<update id="updateAccount" parameterType="java.util.Map">
+		UPDATE sys_account set
+		account_status=#{accountStatus},remark=#{remark}
+		<if test="accountPassword !=null and accountPassword != ''">
+			,account_password=#{accountPassword}
+		</if>
+		where id=#{id}
+	</update>	
+	<update id="modifyPassword" parameterType="java.util.Map">
+		UPDATE sys_account set
+		account_password=#{newPassword}
+		where id=#{id}
+	</update>	
+	<select id="getById" parameterType="string" resultType="java.util.Map">
+			SELECT
+				A.id AS id,
+				A.account_name AS accountName,
+			DATE_FORMAT(A.login_time, "%Y-%m-%d %H:%i") AS loginTime,
+			DATE_FORMAT(A.last_login_time, "%Y-%m-%d %H:%i") AS lastLoginTime,
+			DATE_FORMAT(A.create_date, "%Y-%m-%d %H:%i") AS createDate,
+				A.account_type AS accountType,
+				A.account_status AS accountStatus,
+				A.remark AS remark
+			FROM
+				sys_account AS A
+			where A.id=#{id}	
+	</select>
+  <delete id="delById" parameterType="string">
+  	delete FROM sys_account where id=#{id}
+  </delete>	
+</mapper>

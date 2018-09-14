@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="micro-reverse/lib/freemarker.jar"/>
+	<classpathentry kind="lib" path="micro-reverse/lib/mysql-connector-java-5.0.5-bin.jar"/>
+	<classpathentry kind="lib" path="micro-reverse/lib/ojdbc6-11g.jar"/>
+	<classpathentry kind="lib" path="micro-reverse/lib/rapid-generator-3.9.2.20100720-source.jar"/>
+	<classpathentry kind="lib" path="micro-reverse/lib/rapid-generator.jar"/>
+	<classpathentry kind="output" path="target"/>
+</classpath>
