@@ -30,8 +30,19 @@ public class BaseCouponHistory extends BaseEntity {
 	private java.util.Date spreadTime;
 	//推广人姓名
 	private String spreadPeople;//推广人姓名
+	//推广状态： 1.推广  2.未推广
+	private java.lang.String spreadStatus;
+	
 	//columns END
 
+
+	public java.lang.String getSpreadStatus() {
+		return spreadStatus;
+	}
+
+	public void setSpreadStatus(java.lang.String spreadStatus) {
+		this.spreadStatus = spreadStatus;
+	}
 
 	public void setId(java.lang.Long id) {
 		this.id = id;

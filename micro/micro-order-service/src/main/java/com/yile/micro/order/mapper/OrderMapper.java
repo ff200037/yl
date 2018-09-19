@@ -1,7 +1,5 @@
 package com.yile.micro.order.mapper;
 
-import java.util.List;
-import java.util.Map;
 import com.yile.micro.base.mapper.BaseMapper;
 import com.yile.micro.order.bean.Order;
 
@@ -12,6 +10,4 @@ import com.yile.micro.order.bean.Order;
  */
 public interface OrderMapper extends BaseMapper<Order>{
 
-	List<Order> findList(Map<String, Object> map);
-	
 }

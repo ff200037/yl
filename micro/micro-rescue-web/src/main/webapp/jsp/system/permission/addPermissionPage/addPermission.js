@@ -1,16 +1,14 @@
 var id = UD.lib.createHidden("id");
 var fkPid = UD.lib.createHidden("fkPid");
-var commonWidth = 300;
 var fkPidName = UD.lib.createTwinTriggerField({
 	fieldLabel : "上级权限分类名称",
-	onTriggerClick : function(e) {
+	onChooseTriggerClick : function(e) {
 		iframeWindow = UD.lib.showIframeWindow(contextPath+ "/system/permission/permissionFolderPage", 250, 350, "选择上级权限分类")
 	},
-    onTrigger1Click : function(){
+	onClearTriggerClick : function(){
     	this.reset();
     	fkPid.reset();
     },	
-	width : commonWidth,
 	allowBlank : false
 	,name:"fkPidName"
 });
@@ -22,57 +20,60 @@ window.setPermissionFolder = function(id, text) {
 var permissionName = UD.lib.createTextField({
 	fieldLabel : "权限名称",
 	name : "permissionName",
-	allowBlank : false,
-	width : commonWidth
+	allowBlank : false
 })
 var permissionPath = UD.lib.createTextField({
 	fieldLabel : "权限路径",
 	name : "permissionPath",
-	allowBlank : false,
-	width : commonWidth
+	allowBlank : false
 });
 var application = UD.lib.createComboBox({
 	fieldLabel : '应用名称',
 	valueField : 'id',
 	displayField : 'app_name',
-	hiddenName : 'fkApplication',
-	store : new Ext.data.JsonStore({
+	name : 'fkApplication',
+	store : UD.lib.createSimpleJsonStore({
 		fields : [ "id", "app_name" ],
 		url : contextPath + "/system/application/getAppListData",
 		autoLoad : true
 	}),
-	allowBlank : false,
-	width : commonWidth
+	allowBlank : false
 });
 var permissionType = UD.lib.createComboBox({
 	fieldLabel : '权限类型',
 	valueField : 'id',
 	displayField : 'name',
-	hiddenName : 'permissionType',
+	name : 'permissionType',
 	value:"notPage",
 	store : new Ext.data.SimpleStore({
 		data : [ [ 'page', '菜单权限' ], [ 'notPage', '非菜单权限' ] ],
 		fields : [ "id", "name" ]
 	}),
-	allowBlank : false,
-	width : commonWidth
+	allowBlank : false
 });
 
 var remark = UD.lib.createTextField({
 	fieldLabel : "备注",
-	name : "remark",
-	width : commonWidth
+	name : "remark"
 })
 var addForm = new Ext.FormPanel({
-	frame : true,
-	border : false,
-	autoHeight : true,
-	labelAlign : "right",
-	labelWidth : 110,
-	items : [id, fkPid, fkPidName, permissionName,permissionPath, permissionType, application,
-			 remark ],
-	buttonAlign : "center",
-	buttons : [ UD.lib.createSaveBtn(saveAction) ]
+	bodyPadding:5,
+	layout: 'column',
+ 	fieldDefaults: {
+ 		labelAlign: 'right'
+//        ,labelWidth: 100
+    },	
+    defaults: {
+        layout: 'form'
+        ,xtype: 'container'
+        ,columnWidth:1
+    },
+	items: [
+		{items: [id, fkPid, fkPidName, permissionName,permissionPath, permissionType, application,remark ]}
+    ]
+
+	,buttonAlign : "center"
+	,buttons : [ UD.lib.createSaveBtn(saveAction) ]
 });
 function saveAction() {
 	var theForm = this.findParentByType("form");
@@ -82,7 +83,7 @@ function saveAction() {
         function(action) {
             Ext.MessageBox.alert('提示', action.result.msg,function() {
             	parent.iframeWindow.hide();
-            	parent.treePanel.getRootNode().reload();
+            	parent.treePanel.getStore().reload();
             });
         })
     }

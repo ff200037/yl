@@ -28,7 +28,7 @@ public class MenuController {
 	 */
 	@RequestMapping("/menuPage")
 	public String menuPage(Model model) {
-		return "system2/menu/menuPage";
+		return "system/menu/menuPage";
 	}
 	/**添加菜单项的页面
 	 * @param model
@@ -36,7 +36,7 @@ public class MenuController {
 	 */
 	@RequestMapping("/addMenuPage")
 	public String addMenuPage(Model model) {
-		return "system2/menu/addMenuPage/addMenuPage";
+		return "system/menu/addMenuPage/addMenuPage";
 	}
 	/**添加菜单分类的页面
 	 * @param model
@@ -44,7 +44,7 @@ public class MenuController {
 	 */
 	@RequestMapping("/addMenuFolderPage")
 	public String addMenuFolderPage(Model model) {
-		return "system2/menu/addMenuFolderPage/addMenuFolderPage";
+		return "system/menu/addMenuFolderPage/addMenuFolderPage";
 	}
 	/**选择菜单分类的页面
 	 * @param model
@@ -52,7 +52,7 @@ public class MenuController {
 	 */
 	@RequestMapping("/menuFolderPage")
 	public String menuFolderPage(Model model) {
-		return "system2/menu/menuFolderPage/menuFolderPage";
+		return "system/menu/menuFolderPage/menuFolderPage";
 	}
 	/**选择权限
 	 * @param model
@@ -60,15 +60,16 @@ public class MenuController {
 	 */
 	@RequestMapping("/selectPermission")
 	public String selectPermission(Model model) {
-		return "system2/menu/permission/selectPermission";
+		return "system/menu/permission/selectPermission";
 	}
 	/**菜单树
 	 * @param node
 	 * @return
 	 */
 	@RequestMapping(value = "/getTreeData")
-	public ResponseEntity getTreeData() {
-		JSONArray allData = menuService.getTreeData();
+	public ResponseEntity getTreeData(HttpServletRequest request) {
+		Map< String, String > map=RequestUtil.paramsToMap(request);
+		JSONArray allData = menuService.getTreeData(map);
 		return new ResponseEntity(allData, HttpStatus.OK);
 	}
 	/**菜单分类树

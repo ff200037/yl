@@ -1,6 +1,5 @@
 	Ext.QuickTips.init();
 	Ext.form.Field.prototype.msgTarget = 'qtip';
-//	Ext.grid.RowNumberer.prototype.width=35;
 	Ext.grid.ColumnModel.prototype.defaultSortable=true;	
 	//禁止所有页面弹出浏览器的右键菜单
 	Ext.get(document).on('contextmenu', function(e) {
@@ -8,34 +7,38 @@
 	});
 //————————————————————————————————————————————————————————————————————————————————————————————————————————
 
-Ext.override(Ext.data.Store, {
+Ext.override(Ext.data.proxy.Ajax, {
 	listeners : {
-		exception:function(dataProxy,type,action,options,response,arg)
+		exception:function (proxy, response, operation, eOpts ) 
 		{
-			debugger
-			var resJson = Ext.decode(response.responseText);
-			//没有配置权限或者该用户没有权限
-			if (response.statusText=="Forbidden") {
-				Ext.MessageBox.alert('提示', resJson.errorMsg);
-			} 
-			else if (response.statusText=="Internal Server Error"){
-				Ext.MessageBox.alert('提示', "服务器内部错误");
-			}
-			else if (response.statusText=="communication failure"){
+			var status=response.status;
+			if (status==0){
 				Ext.MessageBox.alert('提示', "连接不上服务器");
+				return;
 			}
-			else if (response.statusText=="transaction aborted"){
-				Ext.MessageBox.alert('提示', "请求超时");
+			if (status==404){
+				Ext.MessageBox.alert('提示', "请求无效");
+				return;
 			}
-			else if (response.statusText=="OK"){
+			if (status==500){
+				Ext.MessageBox.alert('提示', "服务器内部错误");
+				return;
+			}
+			if (status==403) {
+				//没有配置权限或者该用户没有权限
+				var resJson = Ext.decode(response.responseText);
+				Ext.MessageBox.alert('提示', resJson.errorMsg);
+				return;
+			} 
+			else{
+				//else里的代码未测试
 				if (action=="read") {
 					Ext.MessageBox.alert('提示', "解析数据出错");
+					return;
 				} else {
 					Ext.MessageBox.alert('提示', "其他错误");
+					return;
 				}
-			}
-			else {
-				Ext.MessageBox.alert('提示', "其他错误");
 			}
 			
 		}

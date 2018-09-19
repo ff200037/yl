@@ -25,6 +25,7 @@ public class CouponHistory extends BaseCouponHistory {
 			.append("SpreadChannel",getSpreadChannel())
 			.append("SpreadTime",getSpreadTime())
 			.append("SpreadPeople",getSpreadPeople())
+			.append("SpreadStatus",getSpreadStatus())
 			.toString();
 	}
 	
@@ -39,6 +40,7 @@ public class CouponHistory extends BaseCouponHistory {
 			.append(getSpreadChannel())
 			.append(getSpreadTime())
 			.append(getSpreadPeople())
+			.append(getSpreadStatus())
 			.toHashCode();
 	}
 	
@@ -56,6 +58,7 @@ public class CouponHistory extends BaseCouponHistory {
 			.append(getSpreadChannel(),other.getSpreadChannel())
 			.append(getSpreadTime(),other.getSpreadTime())
 			.append(getSpreadPeople(), other.getSpreadPeople())
+			.append(getSpreadStatus(), other.getSpreadStatus())
 			.isEquals();
 	}
 }

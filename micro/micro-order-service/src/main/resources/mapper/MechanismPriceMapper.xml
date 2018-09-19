@@ -1,30 +1,33 @@
 <!DOCTYPE mapper
-PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
-"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
 <!-- t_mechanism_price : 机构定价关系表 mybatis 配置  -->
 <mapper namespace="com.yile.micro.order.mapper.MechanismPriceMapper">
 
     <resultMap id="mechanismPriceResult" type="MechanismPrice">
-        <result column="id" property="id" jdbcType="OTHER" />
-        <result column="price_id" property="priceId" jdbcType="OTHER" />
-        <result column="mechanism_id" property="mechanismId" jdbcType="OTHER" />
-        <result column="create_time" property="createTime" jdbcType="OTHER" />
+        <result column="id" property="id" jdbcType="OTHER"/>
+        <result column="price_id" property="priceId" jdbcType="OTHER"/>
+        <result column="mechanism_id" property="mechanismId" jdbcType="OTHER"/>
+        <result column="create_time" property="createTime" jdbcType="OTHER"/>
     </resultMap>
 
-	<!-- 用于select查询公用抽取的列 -->
-	<sql id="commonSelectColumnsPrefix">
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="commonSelectColumnsPrefix">
 	    <![CDATA[
+
 	    select
         	id ,
         	price_id ,
         	mechanism_id ,
         	create_time 
-	    ]]>
+
+        ]]>
 	</sql>
 
     <insert id="insert" parameterType="MechanismPrice" useGeneratedKeys="true" keyProperty="id">
     <![CDATA[
+
         INSERT INTO
         t_mechanism_price (
         	id ,
@@ -37,70 +40,126 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         		#{mechanismId,jdbcType=BIGINT} ,
         		#{createTime,jdbcType=TIMESTAMP} 
         )
-    ]]>
+
+        ]]>
 
     </insert>
 
     <update id="update" parameterType="mechanismPrice">
     <![CDATA[
+
         UPDATE t_mechanism_price SET
         			price_id = #{priceId,jdbcType=BIGINT} ,
         			mechanism_id = #{mechanismId,jdbcType=BIGINT} ,
         			create_time = #{createTime,jdbcType=TIMESTAMP} 
         WHERE 
 	        id = #{id} 
-    ]]>
+
+        ]]>
     </update>
 
     <delete id="deleteById" parameterType="java.lang.Long">
     <![CDATA[
+
         delete from t_mechanism_price where
         id = #{id} 
-    ]]>
+
+        ]]>
     </delete>
-    
+
     <select id="queryById" resultMap="mechanismPriceResult" parameterType="java.lang.Long">
-	    <include refid="commonSelectColumnsPrefix"/>
-	    <![CDATA[
+        <include refid="commonSelectColumnsPrefix"/>
+        <![CDATA[
 	        from t_mechanism_price 
 	        where 
 		        id = #{id} 
 	    ]]>
     </select>
 
-	<sql id="dynamicWhere">
-		<where>
-		     1=1
-			<if test="id!=null">
-				AND id = #{id}
-			</if>
-			<if test="priceId!=null">
-				AND price_id = #{priceId}
-			</if>
-			<if test="mechanismId!=null">
-				AND mechanism_id = #{mechanismId}
-			</if>
-			<if test="createTime!=null">
-				AND create_time = #{createTime}
-			</if>
-		</where>
-	</sql>
-	 
+    <sql id="dynamicWhere">
+        <where>
+            1=1
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="priceId!=null">
+                AND price_id = #{priceId}
+            </if>
+            <if test="mechanismId!=null">
+                AND mechanism_id = #{mechanismId}
+            </if>
+            <if test="createTime!=null">
+                AND create_time = #{createTime}
+            </if>
+        </where>
+    </sql>
+
     <select id="queryCount" parameterType="MechanismPrice" resultType="int">
-    <![CDATA[
+        <![CDATA[
         select 
         count(*)
         from t_mechanism_price
     ]]>
-		<include refid="dynamicWhere"/>    
-    </select>  
-    
+        <include refid="dynamicWhere"/>
+    </select>
+
     <select id="queryList" resultMap="mechanismPriceResult" parameterType="MechanismPrice">
-    	<include refid="commonSelectColumnsPrefix"/>
-	    <![CDATA[
+        <include refid="commonSelectColumnsPrefix"/>
+        <![CDATA[
 	        from t_mechanism_price 
 	    ]]>
-	    <include refid="dynamicWhere"/>
+        <include refid="dynamicWhere"/>
     </select>
+
+    <select id="queryCountByRescueObject" resultType="int" parameterType="map">
+		<![CDATA[
+	        select count(1)
+	        from t_price p, t_mechanism_price m
+	        where
+	            p.id = m.price_id
+		        and rescue_object = #{rescueObject}
+		        and m.mechanism_id = #{mechanismId}
+        ]]>
+	</select>
 	
+	<select id="queryMechanismList" resultType="map" parameterType="map">
+        select
+        	id AS id,        	
+        	mechanism_name AS mechanismName,
+        	mechanism_type AS mechanismType,
+        	city AS city,
+        	legal_person AS legalPerson,
+        	mechanism_addr AS mechanismAddr,
+        	mechanism_number AS mechanismnNumber,
+        	person AS person,
+        	person_number AS personNumber
+        <![CDATA[
+	        from t_mechanism
+	    ]]>
+        <where>
+            mechanism_type = '2'
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="mechanismName!=null and mechanismName!=''">
+                AND mechanism_name = #{mechanismName}
+            </if>
+            <if test="city!=null and city!=''">
+                AND city = #{city}
+            </if>
+            <if test="mechanismAddr!=null and mechanismAddr!=''">
+                AND mechanism_addr = #{mechanismAddr}
+            </if>
+        </where>
+    </select>
+    
+    <delete id="deleteByPriceId" parameterType="java.lang.Long">
+    <![CDATA[
+
+        delete from t_mechanism_price where
+        price_id = #{priceId} 
+
+        ]]>
+    </delete>    
+
 </mapper>

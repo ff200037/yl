@@ -9,9 +9,12 @@ var rescueObject = UD.lib.createComboBox({
     store : UD.lib.createSimpleJsonStore({
         fields : ["id", "name"],
         url : contextPath
-        + "/price/template/getRescueObject",
+        + "/price/template/getDictionaryDataListByCode?code=rescue_object",
         autoLoad : true
     })
+});
+var mechanismNames = UD.lib.createTextField({
+	fieldLabel : '救援机构名称'
 });
 
 var resetBtn=UD.lib.createResetBtn();
@@ -22,7 +25,8 @@ var searchBtn=UD.lib.createSearchBtn(function()
 		store:grid.getStore()
 		,params:{
             priceName:priceName.getValue(),
-            rescueObject:rescueObject.getValue()
+            rescueObject:rescueObject.getValue(),
+            mechanismNames:mechanismNames.getValue()
 		}
 		,isClearLastParams:false
 	}
@@ -41,7 +45,7 @@ var searchForm = new Ext.FormPanel({
         ,columnWidth:.3
     },
 	items: [
-		{items: [priceName]},{items: [rescueObject]}
+		{items: [priceName]},{items: [rescueObject]},{items: [mechanismNames]}
 	]
     ,region:"north"
     ,buttonAlign:"center"

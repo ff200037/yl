@@ -1,4 +1,71 @@
+/* window置顶后的背景样式 */
 body > .x-mask {
     background-image: none;
     background-color:rgba(208, 208, 208, 0.5);
 }
+
+/* panel的标题栏样式 */
+.x-panel-header-default-top {
+    box-shadow: 0 1px 0 0 #99bbe8 inset;
+}
+.x-panel-header-default {
+    background-color: #99bbe8;
+    background-image: -moz-linear-gradient(center top , #99bbe8, #99bbe8);
+}
+.x-panel-header-default-horizontal {
+    padding: 5px;
+}
+.x-panel-header-default {
+    border: 1px solid #99bbe8;
+    font-size: 11px;
+}
+
+/* window的标题栏样式 */
+.x-window-header-default-top {
+    box-shadow: 0 1px 0 0 #99bbe8 inset, -1px 0 0 0 #99bbe8 inset, 1px 0 0 0 #99bbe8 inset;
+}
+.x-window-header-default-top {
+    background-color: #99bbe8;
+    border-radius: 5px 5px 0 0;
+    border-style: solid;
+    border-width: 1px 1px 0;
+    padding: 5px 5px 1px;
+}
+
+/* panel的顶部工具栏的背景颜色改成白色 */
+.x-toolbar-default {
+    background-color: white;
+    background-image: -moz-linear-gradient(center top , white,white);
+    border-color: #bcb0b0;
+    border-style: solid;
+    border-width: 1px;
+    padding: 2px 0 2px 2px;
+}
+
+/* grid的复选框和序号的背景颜色改成白色 */
+.x-grid-cell-special {
+    background-color: white;
+    background-image: -moz-linear-gradient(center top , white, white);
+    border-color: #c6c6c6;
+    border-right: 1px solid #c6c6c6;
+    border-style: solid;
+}
+
+/* panel的标题栏的字体的样式 */
+.x-panel-header-title-default {
+    color: #333;
+    font-family: tahoma,arial,verdana,sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 15px;
+}
+/* window的标题栏的字体的样式 */
+.x-window-header-title-default {
+    color: #333;
+    font-family: tahoma,arial,verdana,sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 15px;
+}
+
+

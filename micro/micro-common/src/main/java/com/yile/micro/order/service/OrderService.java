@@ -1,11 +1,9 @@
 package com.yile.micro.order.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
 import com.yile.micro.base.service.IBaseService;
-import com.yile.micro.common.PageBean;
 import com.yile.micro.common.utils.MapRet;
 import com.yile.micro.order.bean.Order;
 
@@ -42,10 +40,21 @@ public interface OrderService extends IBaseService<Order> {
 	 * @return
 	 */
 	public MapRet deleteOrder(Order order ) throws Exception;
+	
+	/**
+	 * 删除订单
+	 * @param orderId
+	 * @return
+	 */
+	public MapRet deleteOrderById(Long orderId) throws Exception;
 
-	
-	 
-	
+	/**
+	 * 列表分页
+	 * @param map
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
 	public PageInfo<Order> findPage(Map<String, Object> map, int pageNo, int pageSize);
 
 	

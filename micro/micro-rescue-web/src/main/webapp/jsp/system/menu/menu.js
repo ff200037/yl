@@ -32,10 +32,9 @@ var store =UD.lib.createPagingJsonStore(
 	]
 });
 var grid=Ext.create('Ext.grid.Panel', {
-//    selModel: new Ext.selection.CheckboxModel(),
     store: store,
     columnLines: true,
-    forceFit: true,
+    forceFit: false,
    	columns: [
    		{ xtype: "rownumberer",align:"center",text:"序号",width:55}
 	,{text: "上级菜单分类名称",dataIndex: 'parentMenuName' }
@@ -54,24 +53,17 @@ var grid=Ext.create('Ext.grid.Panel', {
 
 grid.on("rowdblclick",function(thegrid,rowIndex,e)
 {
-	var record=this.getSelectionModel().getSelected();
+	var record=this.getSelectionModel().getSelection()[0];
 	if (record.get("isFolder")=="T") {
-		UD.lib.showWindow(addForm,"修改菜单分类");
-
-		fkPidName.setValue(record.get("parentMenuName"));
-		menuName.setValue(record.get("menuName"));
-		menuId.setValue(record.get("id"));
+        var params = {
+        		id: record.get("id")
+        };
+        iframeWindow = UD.lib.showIframeWindow(contextPath + "/system/menu/addMenuFolderPage?" + Ext.urlEncode(params), 430,450, "修改菜单分类")		
 	} else {
-		UD.lib.showWindow(addMenu_addForm,"修改菜单");
-
-		addMenu_fkPidName.setValue(record.get("parentMenuName"));
-		addMenu_menuName.setValue(record.get("menuName"));
-		menuPath.setValue(record.get("permissionPath"));
-		addMenu_menuId.setValue(record.get("id"));
-		
-		
-		permissionId.setValue(record.get("fkPermission"));
-		permissionName.setValue(record.get("permissionName"));
+        var params = {
+        		id: record.get("id")
+        };
+        iframeWindow = UD.lib.showIframeWindow(contextPath + "/system/menu/addMenuPage?" + Ext.urlEncode(params), 430,450, "修改菜单")		
 	}
 }
 );

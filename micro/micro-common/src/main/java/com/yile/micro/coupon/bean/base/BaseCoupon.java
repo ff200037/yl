@@ -26,8 +26,10 @@ public class BaseCoupon extends BaseEntity implements Serializable{
 	private java.lang.String cpnNo;
 	//优惠券类别：1.免费券 2.现金券 3.折扣券
 	private java.lang.String cpnType;
-	//面额/折扣
-	private Double cpnAmt;
+	//面额
+	private Double cpnAmt1;
+	//折扣
+	private Double cpnAmt2;
 	//有效时间类型：1.不限 2.固定日期 3.领用/发放后
 	private java.lang.String dateType;
 	//生效日期
@@ -102,14 +104,22 @@ public class BaseCoupon extends BaseEntity implements Serializable{
 		return this.cpnType;
 	}
 		
-	public void setCpnAmt(Double cpnAmt) {
-		this.cpnAmt = cpnAmt;
+	public void setCpnAmt1(Double cpnAmt1) {
+		this.cpnAmt1 = cpnAmt1;
 	}
 	
-	public Double getCpnAmt() {
-		return this.cpnAmt;
+	public Double getCpnAmt1() {
+		return this.cpnAmt1;
 	}
-		
+	
+	public void setCpnAmt2(Double cpnAmt2) {
+		this.cpnAmt2 = cpnAmt2;
+	}
+	
+	public Double getCpnAmt2() {
+		return this.cpnAmt2;
+	}
+	
 	public void setDateType(java.lang.String dateType) {
 		this.dateType = dateType;
 	}

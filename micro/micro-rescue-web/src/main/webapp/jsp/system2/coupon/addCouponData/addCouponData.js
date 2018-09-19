@@ -196,23 +196,23 @@ var cpnMarks = UD.lib.createTextArea({
 var xj = UD.lib.createNumberField({
 	fieldLabel : '现金',
 	id : 'xj',
-	name : 'cpnAmt',
+	name : 'cpnAmt1',
 	hidden : true
 	
 });
 var zk = UD.lib.createNumberField({
 	fieldLabel : '折扣',
 	id : 'zk',
-	name : 'cpnAmt',
+	name : 'cpnAmt2',
 	hidden : true
 	
 });
 
-var pBe = UD.lib.createComboBox({
+var pbe = UD.lib.createComboBox({
 	fieldLabel : '救援业务类型',
 	valueField : 'id',
 	displayField : 'name',
-	name : 'pBe',
+	name : 'pbe',
 	store : UD.lib.createSimpleJsonStore({
 				fields : ["id", "name"],
 				url : contextPath
@@ -226,15 +226,17 @@ var addForm = new Ext.FormPanel({
 	bodyPadding:5,
 	
 	items: [
+	
 		{
 			layout: 'column',
+			
 		    defaults: {
 		        layout: 'form'
 		        ,xtype: 'container'
 		        ,columnWidth:.3
 		    },
 			items: [
-				{items: [cpnName]}
+				 {items: [cpnName]}
 				, {items: [custRange]}
 				, {items: [areaRange]}
 				
@@ -305,7 +307,7 @@ var addForm = new Ext.FormPanel({
 		        ,columnWidth:.3
 		    },
 			items: [
-				{items: [pBe]}
+				{items: [pbe]}
 				, {items: [cpnMarks]}
 				
 				
@@ -338,4 +340,5 @@ Ext.onReady(function() {
         layout: "fit",
         items: [addForm]
     });
+    
 });

@@ -6,27 +6,10 @@ function isEnableRenderer(val)
 		return "否";
 	}
 }
-var sm=new Ext.grid.CheckboxSelectionModel({singleSelect: false});
-var cm = new Ext.grid.ColumnModel(
+var store =UD.lib.createPagingJsonStore(
 {
-	columns:[new Ext.grid.RowNumberer(),sm
-	,{header:'字典分类名称',dataIndex:'dictionaryName'}
-	,{header:'字典分类编码',dataIndex:'dictionaryCode',width:160}
-	,{header:'字典数据名称',dataIndex:'dictdataName'}
-	,{header:'字典数据值',dataIndex:'dictdataValue'}
-	,{header:'是否启用',dataIndex:'isEnable',renderer:isEnableRenderer}
-	,{header:'添加时间',dataIndex:'createDate',width:110}
-	,{header:'备注',dataIndex:'remark'}
-	
-	]
-	,defaultSortable: true
-}
-);
-var store = new Ext.data.JsonStore({
-	root : 'info',
-	totalProperty : 'count',
-	url :contextPath+ "/system/dictionaryData/getListData"
-	,fields : new Ext.data.Record.create([
+	url : contextPath+ "/system/dictionaryData/getListData",
+	fields : [
 		{name:'id'}
 		,{name:'dictionaryName'}
 		,{name:'dictionaryCode'}
@@ -34,17 +17,16 @@ var store = new Ext.data.JsonStore({
 		,{name:'dictdataValue'}
 		,{name:'isEnable'}
 		,{name:'remark'}
-		,{name:'createDate'}
-				
-	])
+		,{name:'createDate'}	
+	]
 });
 var addbtn = UD.lib.createAddBtn(
 	function() {
-	    var selectedNode = treePanel.getSelectionModel().getSelectedNode();
-	    if (selectedNode) {
+	    var selectedNode = treePanel.getSelectionModel().getSelection();
+	    if (selectedNode.length==1) {
 	        var params = {
-	            fkDictionary: selectedNode.attributes.id,
-	            dicCatName: selectedNode.attributes.text
+	            fkDictionary: selectedNode[0].get("id"),
+	            dicCatName:selectedNode[0].get("text")
 	        };
 	        iframeWindow = UD.lib.showIframeWindow(contextPath + "/system/dictionaryData/addDictionaryDataPage?" + Ext.urlEncode(params), 350, 0, "添加字典数据")
 	    } else {
@@ -58,27 +40,27 @@ var modifyBtn = UD.lib.createModifyBtn(function(record) {
 );
 
 var delbtn=UD.lib.createSingleDelBtn(contextPath+"/system/dictionaryData/delDictionaryData");
-var grid = new Ext.grid.GridPanel({
-	title:"字典数据列表",
-	border : false
-	,loadMask: {msg: '正在读取数据,请稍等...'}
-	,autoScroll:true
-	,cm:cm
-	,sm:sm
-	,store: store
-	,bbar:getPageTool(store)
-	,loadData:function(){
-		var thePageSize=this.getBottomToolbar().pageSize;
-		this.getStore().load(
-		{
-			params : {start : 0,limit : thePageSize}
-		});	
-	}
-	,region: "center"
-	,tbar:[addbtn,"-",modifyBtn,"-",delbtn]
-	
-});
 
+var grid=Ext.create('Ext.grid.Panel', {
+    selModel: new Ext.selection.CheckboxModel(),
+    store: store,
+    columnLines: true,
+    forceFit: false,
+    title:"字典数据列表",
+   	columns: [
+   		{ xtype: "rownumberer",align:"center",text:"序号",width:55}
+		,{text:'字典分类名称',dataIndex:'dictionaryName'}
+		,{text:'字典分类编码',dataIndex:'dictionaryCode',width:160}
+		,{text:'字典数据名称',dataIndex:'dictdataName'}
+		,{text:'字典数据值',dataIndex:'dictdataValue'}
+		,{text:'是否启用',dataIndex:'isEnable',renderer:isEnableRenderer}
+		,{text:'添加时间',dataIndex:'createDate',width:110}
+		,{text:'备注',dataIndex:'remark'}
+    ]
+    ,bbar:UD.lib.getPagebar(store)
+    ,tbar:[addbtn,"-",modifyBtn,"-",delbtn]
+    ,region: "center"
+});
 
 
 Ext.onReady(function(){

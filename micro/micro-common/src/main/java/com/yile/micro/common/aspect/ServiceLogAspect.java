@@ -1,5 +1,12 @@
 package com.yile.micro.common.aspect;
 
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -26,7 +33,8 @@ public class ServiceLogAspect {
 	@Before("servicelog()")
 	public void dobefore(JoinPoint point) {
 		printLog(point);
-		logger.info("service请求参数：{}",JSON.toJSONString(point.getArgs()));
+		if(point!=null && point.getArgs()!=null && point.getArgs().length > 0)
+			logger.info("service请求参数：{}",JSON.toJSONString(point.getArgs()));
 	}
 
 	private void printLog(JoinPoint point) {
@@ -38,12 +46,39 @@ public class ServiceLogAspect {
 	}
 	
 	@AfterReturning(returning = "ret", pointcut = "servicelog()")
-    public void doafter(JoinPoint point,Object ret) {
-		logger.info("service返回值:{}",JSON.toJSONString(ret));
+    public void doafter(Object ret) {
+		if(ret!=null)
+			logger.info("service返回值:{}",JSON.toJSONString(ret));
 	}
 	@AfterThrowing(throwing = "e", pointcut = "servicelog()")
 	public void dothrowing(JoinPoint point,Throwable e) {
-		printLog(point);
-		logger.info("service异常信息:{}",e.getMessage());
+		if(point!=null && point.getArgs()!=null && point.getArgs().length > 0)
+			printLog(point);
+		logger.info("service异常:{}",JSON.toJSONString(getThrowableStrRep(e)));
+	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static String[] getThrowableStrRep(Throwable throwable) {
+		if (throwable == null) {
+			return new String[0];
+		}
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		throwable.printStackTrace(pw);
+		pw.flush();
+		LineNumberReader reader = new LineNumberReader(new StringReader(
+				sw.toString()));
+		ArrayList lines = new ArrayList();
+		try {
+			String line = reader.readLine();
+			while (line != null) {
+				lines.add(line);
+				line = reader.readLine();
+			}
+		} catch (IOException ex) {
+			lines.add(ex.toString());
+		}
+		String[] rep = new String[lines.size()];
+		lines.toArray(rep);
+		return rep;
 	}
 }

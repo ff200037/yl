@@ -18,7 +18,7 @@ import com.yile.micro.common.PageBean;
 public class PageQueryAspect {
 	public final static String CURRENT_PAGE = "curPage";
 	public final static String PAGE_SIZE = "pageSize";
-	@Pointcut("execution(public * com.yile.micro.*.service.*.*Page(..))")
+	@Pointcut("execution(public * com.yile.micro.*.mapper.*.*Page(..))")
 	public void pagelog() {
 	}
 	/**

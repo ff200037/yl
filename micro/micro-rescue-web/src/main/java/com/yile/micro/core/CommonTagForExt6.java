@@ -31,11 +31,11 @@ public class CommonTagForExt6 extends BodyTagSupport {
 		try {
 			JspWriter out = pageContext.getOut();  
 			String returnStr="\n";
-//			out.print("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>"+returnStr);
-////			out.print("<meta charset='UTF-8'>"+returnStr);
-//			out.print("<meta http-equiv='pragma' content='no-cache'>"+returnStr);
-//			out.print("<meta http-equiv='cache-control' content='no-cache'>"+returnStr);
-//			out.print("<meta http-equiv='expires' content='0'>"+returnStr);
+			out.print("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>"+returnStr);
+//			out.print("<meta charset='UTF-8'>"+returnStr);
+			out.print("<meta http-equiv='pragma' content='no-cache'>"+returnStr);
+			out.print("<meta http-equiv='cache-control' content='no-cache'>"+returnStr);
+			out.print("<meta http-equiv='expires' content='0'>"+returnStr);
 			List<String> linkList=getLink();
 			for (String item : linkList) {
 				out.print("<link rel='stylesheet' type='text/css' href='"+basePath+item+"'/>"+returnStr);
@@ -45,7 +45,6 @@ public class CommonTagForExt6 extends BodyTagSupport {
 				out.print("<script type='text/javascript' src='"+basePath+item+"'></script>"+returnStr);
 			}
 			out.print("<script type='text/javascript'>"+returnStr);
-			out.print("//使用自定义标签"+returnStr);
 			out.print("var contextPath='"+basePath2+"';"+returnStr);
 			out.print("</script>"+returnStr);
 			
@@ -60,8 +59,8 @@ public class CommonTagForExt6 extends BodyTagSupport {
 
 	private List<String> getScript() {
 		List<String> scriptList=new ArrayList<String>();
-		scriptList.add("resource2/js/ext/ext-all-debug.js");
-//		scriptList.add("resource2/js/ext/ext-all.js");
+//		scriptList.add("resource2/js/ext/ext-all-debug.js");
+		scriptList.add("resource2/js/ext/ext-all.js");
 		scriptList.add("resource2/js/ext/classic/locale/locale-zh_CN.js");
 //		scriptList.add("resource/js/tool/HtmlPanel.js");
 		

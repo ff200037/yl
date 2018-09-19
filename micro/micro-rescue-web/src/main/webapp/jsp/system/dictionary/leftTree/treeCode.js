@@ -1,38 +1,23 @@
 var editDic=new Ext.menu.Item({
-	id : 'editDic',
 	text : '修改字典分类',
 	iconCls : "edit"
+	,listeners : {
+		click:function( item, e, eOpts )
+		{
+			var node = item.parentMenu.contextNode;
+			editDictionary(node)
+		}
+	} 	
 })
 var delDic = new Ext.menu.Item({
-	id: 'delDic',
 	text: '删除'
-	,iconCls : "delete"    	
-});
-var menus = new Ext.menu.Menu({
-	items : [ 
-		new Ext.menu.Item({
-			id : 'addDic',
-			text : '新增下级字典分类',
-			iconCls : "add"
-		})
-		,editDic,delDic
-
-	],
-	listeners : {
-		itemclick : function(item) {
-			switch (item.id) {
-				case 'addDic':
-					var n = item.parentMenu.contextNode;
-					addDictionary(n)
-					break;
-				case 'editDic':
-					var n = item.parentMenu.contextNode;
-					editDictionary(n)
-					break;
-	            case 'delDic':
+	,iconCls : "delete" 
+	,listeners : {
+		click:function( item, e, eOpts )
+		{
 	            	var node = item.parentMenu.contextNode;
 	            	var params={
-	            			id: node.id
+	            			id: node.get("id")
 	            	}
 	    			Ext.Msg.confirm('提示', '确定要删除吗?', function(btn) {
 	    				if (btn != 'yes') {
@@ -43,100 +28,100 @@ var menus = new Ext.menu.Menu({
 			    					var resJson = Ext.decode(response.responseText);
 			    					Ext.Msg.alert("提示", resJson.msg,function() {
 			    						if (resJson.success==true) {
-			    							treePanel.getRootNode().reload();
+			    							treePanel.getStore().reload();
 										}
 			    					});
 	    						}
 	    				);
 	    				
-	    			});            	
-	            	break; 					
-			}
+	    			}); 
 		}
-	}
+	} 	
 });
-//原来的treePanel
-//var treePanel = new Ext.tree.TreePanel({
-//	border : false,
-//	autoScroll : true,
-//	loader : new Ext.tree.TreeLoader({
-//		dataUrl : contextPath + '/system/dictionary/getTreeData'
-//	}),
-//	root : new Ext.tree.AsyncTreeNode(),
-//	rootVisible : false,
-//
-//	region : "west",
-//	split : true,
-//	collapsible : true,
-//	width : 190,
-//	maxWidth : 300,
-//	contextMenu : menus,
-//	plugins : 'filterBar',
-//	listeners : {
-//		contextmenu : function(node, e) {
-//			node.select();
-//			
-//			if (node.id=="root") {
-//				editDic.hide();
-//				delDic.hide();
-//			} else {
-//				editDic.show();
-//				delDic.show();
-//			}
-//			var c = node.getOwnerTree().contextMenu;
-//			c.contextNode = node; // contextNode是自定义的一个属性
-//			c.showAt(e.getXY());
-//
-//		}
-//	}
-//});
+var addDic=new Ext.menu.Item({
+	text : '新增下级字典分类',
+	iconCls : "add"
+	,listeners : {
+		click:function( item, e, eOpts )
+		{
+			var node = item.parentMenu.contextNode;
+			addDictionary(node)
+		}
+	} 	
+})
+var menus = new Ext.menu.Menu({
+	items : [addDic,editDic,delDic]
+});
 
 
-var treePanel = new Ext.ux.tree.TreeGrid({
+var treeStore = Ext.create('Ext.data.TreeStore', {
+    proxy: {
+        type: 'ajax',
+        url: contextPath + '/system/dictionary/getTreeData'
+    }
+});
+
+var treePanel= new Ext.tree.TreePanel(
+{
+    reserveScrollbar: true,
+    useArrows: true,
+//    multiSelect: true,多选
+//    singleExpand: true,	
+	
+    columns:[{
+    	xtype: 'treecolumn',
+        text: '分类名称',
+        dataIndex: 'text',
+        width: 170
+    },{
+        text: '分类编码',
+        width: 110,
+        dataIndex: 'dictionaryCode'
+    }],	
+	
 	region : "west",
 	split : true,
-	collapsible : true,
-	width : 400,
-	maxWidth : 400,
-
-    columns:[{
-        header: '分类名称',
-        dataIndex: 'text',
-        width: 230
-    },{
-        header: '分类编码',
-        width: 150,
-        dataIndex: 'dictionaryCode'
-    }],
-    dataUrl: contextPath + '/system/dictionary/getTreeData',
-//	plugins : 'filterBar',
+	collapsible : true
+	,width : 300
+	,maxWidth : 400
 	
-	contextMenu : menus,
-	listeners : {
-	contextmenu : function(node, e) {
-		node.select();
-		
-		if (node.id=="root") {
-			editDic.hide();
-			delDic.hide();
-		} else {
-			editDic.show();
-			delDic.show();
+	,store: treeStore
+	,rootVisible : false
+
+	
+	
+	,contextMenu : menus
+	,listeners : {
+		//这个node的类型是Ext.data.Model
+		itemcontextmenu: function (curr, node, item, index, e, eOpts )
+		{
+			e.preventDefault();//取消浏览器对此事件的默认操作，否则会弹出浏览器的系统菜单
+			
+			if (node.get("id")=="root") {
+				editDic.hide();
+				delDic.hide();
+			} else {
+				editDic.show();
+				delDic.show();
+			}
+			var c = node.getOwnerTree().contextMenu;
+			c.contextNode = node; // contextNode是自定义的一个属性
+			c.showAt(e.getXY());			
+			
 		}
-		var c = node.getOwnerTree().contextMenu;
-		c.contextNode = node; // contextNode是自定义的一个属性
-		c.showAt(e.getXY());
-
+	}	
+}
+);
+treePanel.on("itemclick", function( curr, node, item, index, e, eOpts )  {
+	UD.lib.loadStoreData(
+	{
+		store:grid.getStore()
+		,params:{
+			dictionaryCode : node.get("dictionaryCode")
+		}
+		,isClearLastParams:false
 	}
-}		
+	);
 	
-});
-
-
-
-treePanel.on("click", function(node, event) {
-	grid.getStore().baseParams = {
-		dictionaryCode : node.attributes.dictionaryCode
-	};
-	grid.loadData();
+	
 });

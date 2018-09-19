@@ -6,5 +6,4 @@ import com.yile.micro.coupon.bean.CustomerCoupon;
 public interface CustomerCouponService extends IBaseService<CustomerCoupon>{
 
 	
-	
 }

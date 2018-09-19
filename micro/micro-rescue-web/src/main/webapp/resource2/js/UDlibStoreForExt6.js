@@ -24,12 +24,12 @@ UD.lib.createPagingJsonStore=function (config)
 	            type: 'ajax',
 	            url: config.url,
 	            actionMethods : {
-	            	read : 'POST' //这里不设置的话，默认是发送get请求，get请求的话传中文，后台会有乱码，ext3.4的分页数据源也是发送post请求
+	            	read : config.actionMethods || 'POST' //这里不设置的话，默认是发送get请求，get请求的话传中文，后台会有乱码，ext3.4的分页数据源也是发送post请求
 	            },
 	            reader: {
 	                    type: 'json',
-	                    rootProperty: 'info',
-	                    totalProperty: 'count'
+	                    rootProperty: config.rootProperty || 'info',
+	                    totalProperty: config.totalProperty || 'count'
 	            }
 	    }
 	    ,pageSize:config.pageSize || 10//默认每页显示10条数据

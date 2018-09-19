@@ -35,7 +35,7 @@ public class PermissionServiceImpl implements PermissionService {
 			String isFolder=item.getIsFolder();
 			if ("T".equals(isFolder)) {
 				json.put("leaf", false);
-				json.put("expanded", true);//根节点下的所有节点都展开
+				json.put("expanded", false);
 				json.put("iconCls", "folder");
 			}
 			if ("F".equals(isFolder)) {

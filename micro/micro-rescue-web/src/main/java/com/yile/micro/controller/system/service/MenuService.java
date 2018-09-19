@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 
 public interface MenuService {
 
-	JSONArray getTreeData();
+	JSONArray getTreeData(Map<String, String> map);
 
 	JSONObject saveMenuFolder(Map< String, String > map);
 

@@ -23,13 +23,13 @@ public class OrderServiceImplTest {
 	@Autowired
 	OrderService orderService;
 	
-	@Test
+	//@Test
 	public void pageTest() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		//orderService.findList(map);
+		// orderService.findList(map);
 	}
 
-	@Test
+	//@Test
 	public void saveRescueOrder() throws Exception {
 		
 		RescueOrder rescueOrder = new RescueOrder();
@@ -54,7 +54,7 @@ public class OrderServiceImplTest {
 		System.out.println(ret);
 	}
 
-	@Test
+	//@Test
 	public void updateRescueOrder() throws Exception {
 		Order order = new Order();
 		order.setId(7L);
@@ -81,7 +81,7 @@ public class OrderServiceImplTest {
 		System.out.println(ret);
 	}
 
-	@Test
+	//@Test
 	public void deleteOrder() throws Exception {
 		Order order = orderService.queryById(3L);
 		if(order != null){

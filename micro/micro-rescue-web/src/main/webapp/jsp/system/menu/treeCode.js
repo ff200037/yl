@@ -92,7 +92,7 @@ var menus = new Ext.menu.Menu({
 var treeStore = Ext.create('Ext.data.TreeStore', {
     proxy: {
         type: 'ajax',
-        url: contextPath + '/system/menu/getTreeData'
+        url: contextPath + '/system/menu/getTreeData?expanded=0'
     }
 });
 

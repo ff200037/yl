@@ -4,6 +4,10 @@
 <html>
   <head>
   	<common:ext6></common:ext6>
+  	 <script type="text/javascript">
+  	//解码
+	var jsonParams=Ext.urlDecode('<%=request.getQueryString()%>'); 
+    </script>
 	<script type="text/javascript" src="leftTree/addParamCatWindow.js"></script>
 
 	<script type="text/javascript" src="couponSearchForm.js"></script>

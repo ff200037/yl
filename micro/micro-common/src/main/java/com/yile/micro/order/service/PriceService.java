@@ -8,12 +8,14 @@ import java.util.Map;
 
 public interface PriceService extends IBaseService<Price> {
 
-	PageInfo<Price> getListData(Map<String, Object> map, int pageNum, int pageSize);
+	PageInfo<Price> getPriceListData(Map<String, Object> map, int pageNum, int pageSize);
 
     void savePrice(Price price);
 
     void updatePrice(Price price);
 
     void deletePriceById(Long id);
+    
+    PageInfo<Map < String, Object >> getMechanismListData(Map<String, Object> map, int pageNum, int pageSize);
 }
 

@@ -15,5 +15,10 @@ public interface CouponService extends IBaseService<Coupon> {
 	public void couponBlockUp(Long id);
 	
 	public void couponUse(Long id);
+	
+	//发放优惠券
+	JSONObject grantCoupon(Map< String, String > map);
+	//客户领取优惠券
+	JSONObject receiveCoupon(Map< String, String > map);
 }
 

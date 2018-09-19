@@ -29,7 +29,7 @@ var grid=Ext.create('Ext.grid.Panel', {
     ,tbar:[addbtn,modifyBtn,delbtn]
 });
 grid.on("rowclick",function(thegrid,rowIndex,e)
-{		var record = this.getSelectionModel().getSelected();
+{		var record = this.getSelectionModel().getSelection()[0];
 		if (record.get("app_code")=="systemApplication") {
 			modifyBtn.setDisabled(true);
 			delbtn.setDisabled(true);

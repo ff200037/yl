@@ -1,41 +1,138 @@
 var hidden_id = UD.lib.createHidden("id");
 
-var paramCatName= UD.lib.createTextField({
+var cpnName= UD.lib.createTextField({
 	fieldLabel : '优惠券名称',
-	name:'catName'
+	name:'cpnName',
+	disabled:true
 	
 });
 
-var paramDataName = UD.lib.createTextField({
-	fieldLabel : '优惠券类型',
-	name : 'paramDataName'
-});
-var paramDataCode = UD.lib.createTextField({
-	fieldLabel : '面额/折扣',
-	name : 'paramDataCode'
-});
-var paramDataValue = UD.lib.createTextField({
-	fieldLabel : '发行数量',
-	name : 'paramDataValue'
+var cpnType = UD.lib.createComboBox({
+	fieldLabel : '优惠券类别',
+	valueField : 'id',
+	displayField : 'name',
+	name : 'cpnType',
+	store : UD.lib.createSimpleJsonStore({
+				fields : ["id", "name"],
+				url : contextPath
+						+ "/coupon/coupon/getDictionary?name=coupon_type",
+				autoLoad : true
+			}),
+	disabled:true
 });
 
-var paramDataRemark = UD.lib.createTextField({
-	fieldLabel : '使用数量',
-	name : 'paramDataRemark'
+var cpnNum= UD.lib.createNumberField({
+	fieldLabel : '发行数量',
+	name:"cpnNum",
+	disabled:true
+	
+});
+
+var alrdyGetNum= UD.lib.createNumberField({
+	fieldLabel : '已推广数量',
+	name:"alrdyGetNum",
+	disabled:true
+	
+});
+
+var pbe = UD.lib.createComboBox({
+	fieldLabel : '救援业务类型',
+	valueField : 'id',
+	displayField : 'name',
+	name : 'pbe',
+	store : UD.lib.createSimpleJsonStore({
+				fields : ["id", "name"],
+				url : contextPath
+						+ "/coupon/coupon/getDictionary?name=p_be",
+				autoLoad : true
+			}),
+	disabled:true
+	
+});
+
+var custRange = UD.lib.createComboBox({
+	fieldLabel : '优惠活动对象',
+	valueField : 'id',
+	displayField : 'name',
+	name : 'custRange',
+	store : UD.lib.createSimpleJsonStore({
+				fields : ["id", "name"],
+				url : contextPath
+						+ "/coupon/coupon/getDictionary?name=cust_range",
+				autoLoad : true
+			})
+	,allowBlank : false
+});
+
+	var chk2 = new Ext.form.Checkbox({
+		name:"chk2",
+		inputvalue:"2",
+		boxLabel:"微信公众号",
+		checked:true
+	});
+	var chk1 = new Ext.form.Checkbox({
+		name:"chk1",
+		inputvalue:"1",
+		boxLabel:"APP",
+		checked:true
+	});
+	var spreadChannel = new Ext.form.CheckboxGroup({
+		name:"spreadChannel",
+		fieldLabel:"推广渠道",
+		items:[chk2,chk1]
+		,allowBlank : false
+	});
+
+var spreadMode = UD.lib.createComboBox({
+	fieldLabel : '推广方式',
+	valueField : 'id',
+	displayField : 'name',
+	name : 'spreadMode',
+	store : UD.lib.createSimpleJsonStore({
+				fields : ["id", "name"],
+				url : contextPath
+						+ "/coupon/coupon/getDictionary?name=spread_mode",
+				autoLoad : true
+			}),
+	listeners:{
+        "select" : function(){
+       		var value = spreadMode.getValue()//getRawValue
+       		
+       		console.info("value: "+value);
+       		
+       		
+       		if(value == "1"){
+       			spreadNum.setValue('');
+       			spreadNum.setReadOnly(true);
+       		}else if(value == "2"){
+       			
+       			spreadNum.setReadOnly(false);
+       		}
+      	},
+      	triggerAction : 'all'
+	}
+	,allowBlank : false
+});
+
+var spreadNum= UD.lib.createNumberField({
+	fieldLabel : '推广数量',
+	name:"spreadNum"
+	
 });
 
 var addForm = new Ext.FormPanel({
 	frame : true,
 	border : false,
-	title : "优惠券信息",
+	
 	items: [
+		hidden_id,
 		{
 			layout:"column",
 			defaults:{
 				layout : 'form'
 				,columnWidth:.3
 			},
-			items:[{items:paramCatName},{items:paramDataName},{items:paramDataCode}]
+			items:[{items:cpnName},{items:cpnType},{items:cpnNum}]
 		},
 		{
 			layout:"column",
@@ -43,7 +140,15 @@ var addForm = new Ext.FormPanel({
 				layout : 'form'
 				,columnWidth:.3
 			},
-			items:[{items:paramDataValue},{items:paramDataRemark}]
+			items:[{items:alrdyGetNum},{items:pbe},{items:custRange}]
+		},
+		{
+			layout:"column",
+			defaults:{
+				layout : 'form'
+				,columnWidth:.3
+			},
+			items:[{items:spreadMode},{items:spreadNum},{items:spreadChannel}]
 		}
     ]
 
@@ -55,12 +160,12 @@ function saveAction() {
 	var theForm = this.findParentByType("form");
 	var basicForm = theForm.getForm(); 
     if (basicForm.isValid()) {
-        UD.lib.doFormSubmit(basicForm, contextPath+ '/system/paramData/saveParamData',
+        UD.lib.doFormSubmit(basicForm, contextPath+ '/coupon/coupon/extensionCoupon',
         function(action) {
             Ext.MessageBox.alert('提示', action.result.msg,
             function() {
             	parent.iframeWindow.hide();
-            	parent.grid.getStore().reload();
+            	//parent.grid.getStore().reload();
             });
         })
     }	
@@ -73,14 +178,14 @@ Ext.onReady(function() {
         items: [addForm]
     });
     if (jsonParams.id) {
-    	UD.lib.doFormLoadData(addForm, contextPath+ '/system/paramData/getById?id='+jsonParams.id, function(action)
+    	UD.lib.doFormLoadData(addForm, contextPath + '/coupon/coupon/getById?id='+ jsonParams.id, function(action)
 	    	{
 	    		
 	    	}		
     	);
 	} else {
 	
-		paramCatName.setValue(jsonParams.paramCatName);
+		
 	}
     
 });

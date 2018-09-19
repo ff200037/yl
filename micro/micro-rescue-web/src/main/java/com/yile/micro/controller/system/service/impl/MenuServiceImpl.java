@@ -53,9 +53,15 @@ public class MenuServiceImpl implements MenuService{
 //		list.add("/system/menu/menuPage");
 	    return processAccountTreeData(rootList,accountMenuIdList,basePath);
 	}
-	public JSONArray getTreeData() {
+	public JSONArray getTreeData(Map<String, String> map) {
 		List<MenuVo> rootList = allMenus();
-	    return processTreeData(rootList);
+		
+		Boolean expanded=true;
+		String expandedStr=map.get("expanded");
+		if (expandedStr !=null && "0".equals(expandedStr)) {
+			expanded=false;
+		}
+	    return processTreeData(rootList,expanded);
 	}
 	public JSONArray getMenuFolderTreeData() {
 		List<MenuVo> rootList = allMenus();
@@ -78,18 +84,22 @@ public class MenuServiceImpl implements MenuService{
 		JSONObject json = null;
 		for (MenuVo item : childList) {
 			if (accountMenuIdList.contains(item.getId())) {
+				
 				json = new JSONObject();
 				json.put("id", item.getId());
 				json.put("text", item.getMenuName());
-				if (item.getId().equals("root")) {
-					json.put("expanded", true);
-				}
+				
 				String isFolder=item.getIsFolder();
 				json.put("is_folder", isFolder);
 				if ("T".equals(isFolder)) {
 					json.put("leaf", false);
-					json.put("expanded", true);//根节点下的所有节点都展开
 					json.put("iconCls", "folder");
+					
+					if (item.getId().equals("root")) {
+						json.put("expanded", true);
+					}else {
+						json.put("expanded", false);//根节点下的所有节点都展开
+					}
 				}
 				if ("F".equals(isFolder)) {
 					json.put("leaf", true);
@@ -105,7 +115,7 @@ public class MenuServiceImpl implements MenuService{
 		}
 		return allData;
 	}
-	private JSONArray processTreeData(List<MenuVo> childList) {
+	private JSONArray processTreeData(List<MenuVo> childList, Boolean expanded) {
 		JSONArray allData = new JSONArray();
 		JSONObject json = null;
 		
@@ -113,21 +123,23 @@ public class MenuServiceImpl implements MenuService{
 			json = new JSONObject();
 			json.put("id", item.getId());
 			json.put("text", item.getMenuName());
-			if (item.getId().equals("root")) {
-				json.put("expanded", true);
-			}
 			String isFolder=item.getIsFolder();
 			json.put("is_folder", isFolder);
 			if ("T".equals(isFolder)) {
 				json.put("leaf", false);
-				json.put("expanded", true);//根节点下的所有节点都展开
 				json.put("iconCls", "folder");
+				
+				if (item.getId().equals("root")) {
+					json.put("expanded", true);//只展开根节点
+				}else {
+					json.put("expanded", expanded);
+				}
 			}
 			if ("F".equals(isFolder)) {
 				json.put("leaf", true);
 				json.put("url", item.getAppWebpath()+item.getPermissionPath());
 			}
-			json.put("children", processTreeData(item.getChildList()));
+			json.put("children", processTreeData(item.getChildList(),expanded));
 			allData.add(json);
 		}
 		return allData;

@@ -110,13 +110,43 @@
         ]]>
     </delete>
 
-    <select id="queryById" resultMap="priceResult" parameterType="java.lang.Long">
-        <include refid="commonSelectColumnsPrefix"/>
-        <![CDATA[
-	        from t_price 
-	        where 
-		        id = #{id} 
-	    ]]>
+    <select id="queryById" resultType="Price" parameterType="java.lang.Long">
+    	<![CDATA[
+        SELECT
+        	p.id AS id,
+        	p.price_name AS priceName,
+        	p.rescue_object AS rescueObject,
+        	p.basics_charging AS basicsCharging,
+        	p.additional_charging AS additionalCharging,
+        	p.service_mileage AS serviceMileage,
+        	p.exceed_charging AS exceedCharging,
+        	p.exceed_charging_mileage AS exceedChargingMileage,
+        	p.charging_explain AS chargingExplain,
+        	(
+				SELECT
+					GROUP_CONCAT(mp.mechanism_id)
+				FROM
+					t_mechanism_price mp
+			  WHERE mp.price_id = p.id			
+			) AS mechanismIdStrs,
+        	(
+				SELECT
+					GROUP_CONCAT(m.mechanism_name)
+				FROM
+					t_mechanism m
+				WHERE
+					m.id IN (
+						SELECT
+							mp.mechanism_id
+						FROM
+							t_mechanism_price mp
+						WHERE mp.price_id = p.id
+					)
+			) AS mechanismNames
+	        FROM t_price p
+	        WHERE
+		        p.id = #{id}
+        ]]>
     </select>
 
     <sql id="dynamicWhere">
@@ -128,7 +158,7 @@
             <if test="priceName!=null and priceName!=''">
                 AND price_name = #{priceName}
             </if>
-            <if test="rescueObject!=null and rescueObject!='' and rescueObject!='0'.toString()">
+            <if test="rescueObject!=null and rescueObject!=''">
                 AND rescue_object = #{rescueObject}
             </if>
             <if test="basicsCharging!=null">
@@ -164,7 +194,7 @@
         </where>
     </sql>
 
-    <select id="queryCount" parameterType="Price" resultType="int">
+    <select id="queryCount" resultType="int" parameterType="Price">
         <![CDATA[
         select 
         count(*)
@@ -173,20 +203,67 @@
         <include refid="dynamicWhere"/>
     </select>
 
-    <select id="queryList" resultMap="priceResult" parameterType="Price">
-        <include refid="commonSelectColumnsPrefix"/>
+    <select id="queryList" resultType="Price" parameterType="map">
         <![CDATA[
-	        from t_price 
+        SELECT
+            result.*
+        FROM
+            (
+                SELECT
+                    p.id AS id,
+                    p.price_name AS priceName,
+                    p.rescue_object AS rescueObject,
+                    p.basics_charging AS basicsCharging,
+                    p.additional_charging AS additionalCharging,
+                    p.service_mileage AS serviceMileage,
+                    p.exceed_charging AS exceedCharging,
+                    p.exceed_charging_mileage AS exceedChargingMileage,
+                    p.charging_explain AS chargingExplain,
+                    DATE_FORMAT(
+                        p.create_time,
+                        "%Y-%m-%d %H:%i:%s"
+                    ) AS createTimeStr,
+                    (
+                        SELECT
+                            GROUP_CONCAT(m.mechanism_name)
+                        FROM
+                            t_mechanism m
+                        WHERE
+                            m.id IN (
+                                SELECT
+                                    mp.mechanism_id
+                                FROM
+                                    t_mechanism_price mp
+                                WHERE
+                                    mp.price_id = p.id
+                            )
+                    ) AS mechanismNames
+                FROM
+                    t_price p
+            ) AS result
 	    ]]>
-        <include refid="dynamicWhere"/>
+        <where>
+            1=1
+            <if test="priceName!=null and priceName!=''">
+                AND priceName like CONCAT('%',#{priceName},'%')
+            </if>
+            <if test="rescueObject!=null and rescueObject!=''">
+                AND rescueObject = #{rescueObject}
+            </if>
+            <if test="mechanismNames!=null and mechanismNames!=''">
+                AND mechanismNames like CONCAT('%',#{mechanismNames},'%')
+            </if>
+        </where>
     </select>
 
-    <select id="getListData" resultMap="priceResult" parameterType="map">
-        <include refid="commonSelectColumnsPrefix"/>
+    <select id="queryCountByRescueObject" resultType="int" parameterType="java.lang.String">
         <![CDATA[
+	        select count(1)
 	        from t_price
+	        where
+		        rescue_object = #{rescueObject}
+		        and id not in (select DISTINCT price_id from t_mechanism_price)
 	    ]]>
-        <include refid="dynamicWhere"/>
     </select>
 
 </mapper>

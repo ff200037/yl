@@ -1,59 +1,50 @@
 //提交表单数据
-UD.lib.doFormSubmit=function(theForm, url, callbak) {
+UD.lib.doFormSubmit=function(theForm, url, callbak,params) {
     theForm.submit({
         waitTitle: '提示',
         waitMsg: '正在提交数据',
         //waitMsg : '正在保存数据，请稍候...',
         url: url,
+        params:params || {},
         method: 'post',
         success: function(basicForm, action) {
             callbak(action);
         },
         failure: function(basicForm, action) {
-        	if (action.response.statusText=="Not Found") {
-        		Ext.MessageBox.alert('提示', "请求无效");
-        		return;
-			}
-			var resJson = Ext.decode(action.response.responseText);
-			//没有配置权限或者该用户没有权限
-			if (action.response.statusText=="Forbidden") {
-				Ext.MessageBox.alert('提示', resJson.errorMsg);
-			} 
-			else if (action.response.statusText=="Internal Server Error"){
-				Ext.MessageBox.alert('提示', "服务器内部错误");
-			}
-			//在上传文件失败的时候这个值是有的
-			else if (action.failureType && action.failureType=="server"){
-				if (resJson && resJson.msg) {
-					Ext.MessageBox.alert('提示', resJson.msg);
-				} else {
-					Ext.MessageBox.alert('提示', "服务器内部错误");
-				}
-				
-			}
-			else if (action.response.statusText=="communication failure"){
+ 			var status=action.response.status;
+			if (status==0){
 				Ext.MessageBox.alert('提示', "连接不上服务器");
+				return;
 			}
-			else if (action.response.statusText=="transaction aborted"){
-				Ext.MessageBox.alert('提示', "请求超时");
+			if (status==404){
+				Ext.MessageBox.alert('提示', "请求无效");
+				return;
 			}
-			//显示业务上的信息
-			else if (action.response.statusText=="OK"){
+			if (status==500){
+				Ext.MessageBox.alert('提示', "服务器内部错误");
+				return;
+			}
+			if (status==403) {
+				//没有配置权限或者该用户没有权限
+				var resJson = Ext.decode(action.response.responseText);
+				Ext.MessageBox.alert('提示', resJson.errorMsg);
+				return;
+			} 
+			if (status==200) {
+				//业务上的提示
+				var resJson = Ext.decode(action.response.responseText);
 				Ext.MessageBox.alert('提示', resJson.msg);
-			}
-			else {
-				Ext.MessageBox.alert('提示', "其他错误");
-			}        	
+				return;
+			} 
+			Ext.MessageBox.alert('提示', "未知错误");
+			return;
+			
+			
         }
     })
 
 }
 //加载表单数据
-//UD.lib.doFormLoadData(addForm, contextPath+ '/system/dictionaryData/getById?id='+jsonParams.id, function(action)
-//    	{
-//    		
-//    	}		
-//	);
 UD.lib.doFormLoadData=function(theForm, url, callbak) {
 	theForm.form.load( {
         url : url,
@@ -63,38 +54,33 @@ UD.lib.doFormLoadData=function(theForm, url, callbak) {
         	callbak(action);
         },
         failure : function(form,action) {
-			var resJson = Ext.decode(action.response.responseText);
-			//没有配置权限或者该用户没有权限
-			if (action.response.statusText=="Forbidden") {
-				Ext.MessageBox.alert('提示', resJson.errorMsg);
-			} 
-			else if (action.response.statusText=="Internal Server Error"){
-				Ext.MessageBox.alert('提示', "服务器内部错误");
-			}
-			else if (action.response.statusText=="communication failure"){
+        	theForm.setDisabled(true);//禁止操作表单
+        	
+ 			var status=action.response.status;
+			if (status==0){
 				Ext.MessageBox.alert('提示', "连接不上服务器");
+				return;
 			}
-			else if (action.response.statusText=="transaction aborted"){
-				Ext.MessageBox.alert('提示', "请求超时");
+			if (status==404){
+				Ext.MessageBox.alert('提示', "请求无效");
+				return;
 			}
-			else {
-				if (action.failureType=="load") {
-					if (theForm.title) {
-						Ext.MessageBox.alert('提示', "无法加载数据【"+theForm.title+"】");
-					} else {
-						Ext.MessageBox.alert('提示', "无法加载数据");
-					}
-					
-				} else {
-					Ext.MessageBox.alert('提示', "其他错误");
-				}
-				
-				
-				
-			}        	
+			if (status==500){
+				Ext.MessageBox.alert('提示', "服务器内部错误");
+				return;
+			}
+			if (status==403) {
+				//没有配置权限或者该用户没有权限
+				var resJson = Ext.decode(action.response.responseText);
+				Ext.MessageBox.alert('提示', resJson.errorMsg);
+				return;
+			} 
+			Ext.MessageBox.alert('提示', "未知错误");
+			return;
         }
     });	
 }
+//发送ajax请求
 UD.lib.doAjax=function(url,params, callbak,loadMsg) {
 	if (loadMsg) {
 		Ext.getBody().mask(loadMsg);   
@@ -112,23 +98,34 @@ UD.lib.doAjax=function(url,params, callbak,loadMsg) {
         },
         failure: function(response, options) {
         	Ext.getBody().unmask();
-			var resJson = Ext.decode(response.responseText);
-			//没有配置权限或者该用户没有权限
-			if (response.statusText=="Forbidden") {
-				Ext.MessageBox.alert('提示', resJson.errorMsg);
-			} 
-			else if (response.statusText=="Internal Server Error"){
-				Ext.MessageBox.alert('提示', "服务器内部错误");
-			}
-			else if (response.statusText=="communication failure"){
+        	
+ 			var status=response.status;
+			if (status==0){
 				Ext.MessageBox.alert('提示', "连接不上服务器");
+				return;
 			}
-			else if (response.statusText=="transaction aborted"){
-				Ext.MessageBox.alert('提示', "请求超时");
+			if (status==404){
+				Ext.MessageBox.alert('提示', "请求无效");
+				return;
 			}
-			else {
-				Ext.MessageBox.alert('提示', "其他错误");
-			}          
+			if (status==500){
+				Ext.MessageBox.alert('提示', "服务器内部错误");
+				return;
+			}
+			if (status==403) {
+				//没有配置权限或者该用户没有权限
+				var resJson = Ext.decode(response.responseText);
+				Ext.MessageBox.alert('提示', resJson.errorMsg);
+				return;
+			} 
+			if (status==200) {
+				//业务上的提示
+				var resJson = Ext.decode(response.responseText);
+				Ext.MessageBox.alert('提示', resJson.msg);
+				return;
+			} 
+			Ext.MessageBox.alert('提示', "未知错误");
+			return;         
         	
         }
     });

@@ -166,21 +166,5 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	    ]]>
 	    <include refid="dynamicWhere"/>
     </select>
-    
-    <select id="findPage" resultMap="orderResult" parameterType="Order">
-    	<include refid="commonSelectColumnsPrefix"/>
-	    <![CDATA[
-	        from t_order 
-	    ]]>
-	    <include refid="dynamicWhere"/>
-    </select>
-    
-   	<select id="findList" resultMap="orderResult" parameterType="Order">
-    	<include refid="commonSelectColumnsPrefix"/>
-	    <![CDATA[
-	        from t_order 
-	    ]]>
-	    <include refid="dynamicWhere"/>
-    </select>
 	
 </mapper>

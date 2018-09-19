@@ -197,6 +197,10 @@ public class MapRet extends HashMap {
 		return (value instanceof Boolean && ((Boolean)value == false));
 	}
 	
+	public String toJson() {
+		return FastJson.getJson().toJson(this);
+	}
+	
 	public boolean equals(Object ret) {
 		return ret instanceof MapRet && super.equals(ret);
 	}

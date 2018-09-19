@@ -1,11 +1,11 @@
 package com.yile.micro.order.bean;
 
 
+import com.yile.micro.order.bean.base.BasePrice;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.yile.micro.order.bean.base.BasePrice;
 
 /**
  * 定价表 -- 实体
@@ -14,8 +14,11 @@ import com.yile.micro.order.bean.base.BasePrice;
 @SuppressWarnings("serial")
 public class Price extends BasePrice {
     private String rescueObjectName;
+    private String createTimeStr;
+    private String mechanismIdStrs;
+    private String mechanismNames;    
 
-    public String toString() {
+	public String toString() {
         return new ToStringBuilder(this)
                 .append("Id", getId())
                 .append("PriceName", getPriceName())
@@ -79,5 +82,31 @@ public class Price extends BasePrice {
     public void setRescueObjectName(String rescueObjectName) {
         this.rescueObjectName = rescueObjectName;
     }
+
+	public String getMechanismIdStrs() {
+		return mechanismIdStrs;
+	}
+
+	public void setMechanismIdStrs(String mechanismIdStrs) {
+		this.mechanismIdStrs = mechanismIdStrs;
+	}
+
+	public String getCreateTimeStr() {
+		return createTimeStr;
+	}
+
+	public void setCreateTimeStr(String createTimeStr) {
+		this.createTimeStr = createTimeStr;
+	}
+
+	public String getMechanismNames() {
+		return mechanismNames;
+	}
+
+	public void setMechanismNames(String mechanismNames) {
+		this.mechanismNames = mechanismNames;
+	}
+	
+	
 }
 

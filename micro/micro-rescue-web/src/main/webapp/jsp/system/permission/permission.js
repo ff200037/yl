@@ -24,29 +24,10 @@ function permissionTypeRenderer(val)
 		return ""
 	}
 }	
-var sm=new Ext.grid.CheckboxSelectionModel({singleSelect: false});
-var cm = new Ext.grid.ColumnModel(
+var store =UD.lib.createPagingJsonStore(
 {
-	columns:[new Ext.grid.RowNumberer()
-	,{header: "上级权限分类名称",dataIndex: 'parentPermissionName' }
-	,{header: "权限名称",dataIndex: 'permissionName' }
-	,{header: "节点类型",dataIndex: 'isFolder',renderer:isFolderRenderer }
-	,{header: "权限类型",dataIndex: 'permissionType',renderer:permissionTypeRenderer }
-	,{header: "权限路径",dataIndex: 'permissionPath',width:220 }
-	,{header: "是否系统权限",dataIndex: 'isBuiltIn',renderer:isBuiltInRenderer }
-	,{header: "备注",dataIndex: 'remark' }
-	,{header: "应用名称",dataIndex: 'appName' }
-	,{header: "应用路径",dataIndex: 'appWebpath',width:240 }
-	
-	]
-	,defaultSortable: true
-}
-);
-var store = new Ext.data.JsonStore({
-	root : 'info',
-	totalProperty : 'count',
-	url :contextPath+ "/system/permission/getListData"
-	,fields : new Ext.data.Record.create([
+	url : contextPath+ "/system/permission/getListData",
+	fields : [
 		{name :'id'} 
 		,{name :'parentPermissionName'}
 		,{name :'permissionName'}
@@ -56,36 +37,31 @@ var store = new Ext.data.JsonStore({
 		,{name :'appName'}
 		,{name :'appWebpath'}
 		,{name :'permissionPath'}
-		,{name :'isBuiltIn'}
-				
-	])
+		,{name :'isBuiltIn'}	
+	]
 });
-var grid = new Ext.grid.GridPanel({
-	border : false
-	,loadMask: {msg: '正在读取数据,请稍等...'}
-//	,viewConfig : {forceFit : true}
-	,autoScroll:true
-	,cm:cm
-	,sm:sm
-	,store: store
-	,bbar:getPageTool(store)
-	,loadData:function(){
-		var thePageSize=this.getBottomToolbar().pageSize;
-		this.getStore().load(
-		{
-			params : {start : 0,limit : thePageSize}
-		});	
-	}
-	,region: "center"
-	
-	
-});
-grid.on("rowdblclick",function(thegrid,rowIndex,e)
-{
-	setData(this.getSelectionModel().getSelected());
-}
-);
 
+
+
+var grid=Ext.create('Ext.grid.Panel', {
+    store: store,
+    columnLines: true,
+    forceFit: false,
+   	columns: [
+   		{ xtype: "rownumberer",align:"center",text:"序号",width:55}
+		,{text: "上级权限分类名称",dataIndex: 'parentPermissionName' }
+		,{text: "权限名称",dataIndex: 'permissionName' }
+		,{text: "节点类型",dataIndex: 'isFolder',renderer:isFolderRenderer }
+		,{text: "权限类型",dataIndex: 'permissionType',renderer:permissionTypeRenderer }
+		,{text: "权限路径",dataIndex: 'permissionPath',width:220 }
+		,{text: "是否系统权限",dataIndex: 'isBuiltIn',renderer:isBuiltInRenderer }
+		,{text: "备注",dataIndex: 'remark' }
+		,{text: "应用名称",dataIndex: 'appName' }
+		,{text: "应用路径",dataIndex: 'appWebpath',width:240 }
+    ]
+    ,bbar:UD.lib.getPagebar(store)
+    ,region: "center"
+});
 
 
 Ext.onReady(function(){

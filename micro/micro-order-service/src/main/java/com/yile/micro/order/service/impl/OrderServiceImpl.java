@@ -53,6 +53,7 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	 * 修改订单
 	 * @return
 	 */
+	@Override
 	public Order getOrderById(Long orderId) throws Exception {
 		Order order = this.orderMapper.queryById(orderId);
 		if(order != null){
@@ -67,6 +68,7 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	 * @param RescueOrder
 	 * @return
 	 */
+	@Override
 	public MapRet saveOrder(Order order ) throws Exception {
 		MapRet ret = MapRet.create();
 		this.orderMapper.insert(order);
@@ -86,6 +88,7 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	 * @param rescueOrder
 	 * @return
 	 */
+	@Override
 	public MapRet updateOrder(Order order ) throws Exception {
 		MapRet ret = MapRet.create();
 		this.orderMapper.update(order);
@@ -98,10 +101,24 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	 * @param rescueOrder
 	 * @return
 	 */
-	public MapRet deleteOrder(Order order ) throws Exception {
+	@Override
+	public MapRet deleteOrder(Order order) throws Exception {
 		MapRet ret = MapRet.create();
 		this.orderMapper.deleteById(order.getId());
 		this.rescueOrderMapper.deleteById(order.getId());
+		return ret.setOk();
+	}
+	
+	/**
+	 * 删除订单
+	 * @param rescueOrder
+	 * @return
+	 */
+	@Override
+	public MapRet deleteOrderById(Long orderId) throws Exception {
+		MapRet ret = MapRet.create();
+		this.orderMapper.deleteById(orderId);
+		this.rescueOrderMapper.deleteById(orderId);
 		return ret.setOk();
 	}
 
@@ -109,9 +126,10 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	/**
 	 * 列表
 	 */
+	@Override
 	public PageInfo<Order> findPage(Map<String, Object> map, int pageNo, int pageSize) {
 		PageHelper.startPage(pageNo, pageSize);
-		List<Order> list = this.orderMapper.findList(map);
+		List<Order> list = this.orderMapper.queryList(map);
 		PageInfo<Order> orderPage = new PageInfo<Order>(list);
 		return orderPage;
 	}
@@ -120,6 +138,7 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	 * 自动派单
 	 * 订单状态:1.已派单2.已接单3.已取消4.执行中5.待支付6.已完成
 	 */
+	@Override
 	public MapRet saveAutoSendOrder(Long orderId) throws Exception {
 		MapRet ret = MapRet.create();
 		Order order = this.orderMapper.queryById(orderId);
@@ -143,6 +162,7 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	 * 订单状态:1.已派单2.已接单3.已取消4.执行中5.待支付6.已完成
 	 * rescues_status : 救援人员状态 1:执行中 2.取消任务，增加 3,派遣单
 	 */
+	@Override
 	public MapRet updateDoingOrderByRescues(Long orderId, Long rescuesId) throws Exception {
 		MapRet ret = MapRet.create();
 		Order order = this.orderMapper.queryById(orderId);
@@ -171,6 +191,7 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	 * @throws Exception
 	 * 订单状态:1.已派单2.已接单3.已取消4.执行中5.待支付6.已完成
 	 */
+	@Override
 	public MapRet updateCancelOrderByRescues(Long orderId, Long rescuesId) throws Exception {
 		MapRet ret = MapRet.create();
 		Order order = this.orderMapper.queryById(orderId);
@@ -194,6 +215,7 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	/**
 	 * 重新派发订单
 	 */
+	@Override
 	public MapRet updateNewSendOrderByRescues(Long orderId, Long rescuesId) throws Exception {
 		MapRet ret = MapRet.create();
 		// 从新派单
@@ -214,6 +236,7 @@ public class OrderServiceImpl extends BaseService<Order> implements OrderService
 	/**
 	 * 订单支付完成
 	 */
+	@Override
 	public MapRet updatFinishOrderByRescues(Long orderId, Long rescuesId) throws Exception {
 		MapRet ret = MapRet.create();
 		Order order = this.orderMapper.queryById(orderId);
